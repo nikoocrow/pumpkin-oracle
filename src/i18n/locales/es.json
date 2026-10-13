@@ -1,0 +1,35 @@
+{
+  "intro": {
+    "title": "El Oráculo Calabaza",
+    "welcome": "Tallada a la luz de la luna, encendida con una llama robada. Pregunta, y la calabaza responderá… si te considera digno.",
+    "ctaText": "Despertar al Oráculo",
+    "hint": "El oráculo escucha mejor en silencio."
+  },
+  "name": {
+    "title": "¿Quién se atreve a despertarme? Dime tu nombre, mortal... No lo olvidaré.",
+    "label": "Quedarse sin nombre",
+    "placeholder": "Susurra tu nombre…",
+    "ctaText": "Ofrecer mi nombre",
+    "ctaText2": "quedarme sin nombre",
+    "error": "El oráculo no puede responder a un alma sin nombre."
+  },
+  "question": {
+    "label": "Tu pregunta para el oráculo",
+    "placeholder": "Pregúntale al oráculo…",
+    "listening": "El oráculo te escucha…",
+    "speak": "Di tu pregunta",
+    "stopSpeaking": "Dejar de escuchar",
+    "send": "Preguntar"
+  },
+  "greeting": {
+    "named": "Ah, {{name}}... Te estaba esperando. Soy el Oráculo Calabaza, guardián de secretos tallados a la luz de las velas. Pregunta, y responderé.",
+    "nameless": "Un extraño... qué delicia. Sin nombre, solo preguntas. Soy el Oráculo Calabaza, guardián de secretos tallados a la luz de las velas. Pregunta, extraño, si te atreves."
+  },
+  "answer": {
+    "thinking": "La llama se agita… el oráculo escucha a los espíritus.",
+    "error": "Los espíritus callan esta noche. Pregunta de nuevo, mortal."
+  },
+  "language": {
+    "label": "Idioma"
+  }
+}

@@ -1,0 +1,57 @@
+/* Texto flotante bajo la calabaza, justo encima de la barra de pregunta.
+   No bloquea el ratón para que el canvas siga interactivo. */
+.answer {
+  position: absolute;
+  bottom: calc(max(1.5rem, env(safe-area-inset-bottom)) + 5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100% - 2rem), 36rem);
+  text-align: center;
+  pointer-events: none;
+}
+
+.answer__text {
+  color: var(--color-candle);
+  font-family: var(--font-oracle);
+  font-size: var(--text-whisper);
+  font-style: italic;
+  line-height: var(--leading-body);
+  /* Sombra oscura primero para leerse sobre las velas, luego el resplandor */
+  text-shadow:
+    0 0 6px var(--color-void),
+    0 0 16px var(--mood-glow);
+  animation: answer-rise 1.2s var(--ease-out) both;
+}
+
+/* Pensando: más pequeño, del color del ánimo y respirando */
+.answer__text.is-thinking {
+  color: var(--mood-core);
+  font-size: var(--text-chip);
+  animation:
+    answer-rise 0.6s var(--ease-out) both,
+    answer-breathe 1.6s var(--ease-in-out) 0.6s infinite alternate;
+}
+
+.answer__text.is-error {
+  color: var(--color-bone-dim);
+  font-size: var(--text-chip);
+}
+
+@keyframes answer-rise {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes answer-breathe {
+  to {
+    opacity: 0.4;
+  }
+}

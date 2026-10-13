@@ -1,0 +1,84 @@
+/*
+ * Design tokens de The Pumpkin Oracle.
+ * Los colores y la tipografía tienen su espejo en JS (src/theme/*.js) para Three.js.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* ── Color ─────────────────────────────────────────── */
+  --color-void: #07060a;
+  --color-night: #0f0c14;
+  --color-ash: #1c1820;
+  --color-smoke: #2e2733;
+  --color-bone: #ece2cf;
+  --color-bone-dim: #a89e8c;
+
+  --color-pumpkin: #e8701a;
+  --color-ember: #ff9a3c;
+  --color-flame: #ffc56b;
+  --color-candle: #ffe2b0;
+
+  --color-wraith: #8a6fd1;
+  --color-wraith-pale: #c9b6ff;
+  --color-moonlight: #6f86c0;
+
+  --color-blood: #b3201b;
+  --color-crimson: #ff3b2f;
+
+  /* ── Familias ──────────────────────────────────────── */
+  --font-title: 'Pirata One', 'Times New Roman', serif;
+  --font-oracle: 'Cormorant Garamond', Georgia, serif;
+  --font-ui: 'Manrope', system-ui, sans-serif;
+
+  /* ── Escala tipográfica ────────────────────────────────
+   * Fluida entre 375px (móvil) y 1440px (escritorio):
+   * clamp(móvil, intercepto + pendiente·vw, escritorio)
+   */
+  --text-title: clamp(2.875rem, 1.7746rem + 4.6948vw, 6rem); /* 46 → 96 */
+  --text-subtitle: clamp(1.6875rem, 1.3574rem + 1.4085vw, 2.625rem); /* 27 → 42 */
+  --text-whisper: clamp(1.125rem, 1.037rem + 0.3756vw, 1.375rem); /* 18 → 22 */
+  --text-input: clamp(1.25rem, 1.206rem + 0.1878vw, 1.375rem); /* 20 → 22 */
+  --text-button: clamp(0.8125rem, 0.7905rem + 0.0939vw, 0.875rem); /* 13 → 14 */
+  --text-chip: 0.875rem; /* 14 */
+  --text-label: 0.6875rem; /* 11 */
+  --text-hint: 0.75rem; /* 12 */
+
+  --leading-title: 0.95;
+  --leading-subtitle: 1.3;
+  --leading-body: 1.5;
+
+  --tracking-title: 0.03em;
+  --tracking-button: 0.14em;
+  --tracking-label: 0.2em;
+
+  /* ── Movimiento ────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+
+  /* ── Ánimo por defecto (calm) ──────────────────────── */
+  --mood-core: var(--color-ember);
+  --mood-accent: var(--color-pumpkin);
+  --mood-glow: rgb(255 154 60 / 0.35);
+  --mood-transition-in: 600ms;
+  --mood-transition-out: 600ms;
+}
+
+/* ── Ánimos: document.documentElement.dataset.mood = '…' ── */
+:root[data-mood='thinking'] {
+  --mood-core: var(--color-wraith-pale);
+  --mood-accent: var(--color-wraith);
+  --mood-glow: rgb(138 111 209 / 0.3);
+  --mood-transition-in: 900ms;
+  --mood-transition-out: 400ms;
+}
+
+:root[data-mood='angry'] {
+  --mood-core: var(--color-crimson);
+  --mood-accent: var(--color-blood);
+  --mood-glow: rgb(255 59 47 / 0.4);
+  --mood-transition-in: 250ms;
+  --mood-transition-out: 1200ms;
+}

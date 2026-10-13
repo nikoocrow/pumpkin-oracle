@@ -1,0 +1,35 @@
+{
+  "intro": {
+    "title": "The Pumpkin Oracle",
+    "welcome": "Carved by moonlight, lit by a stolen flame. Ask, and the pumpkin shall answer… if it deems you worthy.",
+    "ctaText": "Wake the Oracle",
+    "hint": "The oracle hears better in silence."
+  },
+  "name": {
+    "title": "Who dares to wake me? Tell me your name, mortal... I will not forget it.",
+    "label": "Stay nameless",
+    "placeholder": "Whisper your name…",
+    "ctaText": "Offer my name",
+    "ctaText2": "stay nameless",
+    "error": "The oracle cannot answer a nameless soul."
+  },
+  "question": {
+    "label": "Your question for the oracle",
+    "placeholder": "Ask the oracle…",
+    "listening": "The oracle is listening…",
+    "speak": "Speak your question",
+    "stopSpeaking": "Stop listening",
+    "send": "Ask"
+  },
+  "greeting": {
+    "named": "Ah, {{name}}... I have been waiting for you. I am the Pumpkin Oracle, keeper of secrets carved by candlelight. Ask, and I shall answer.",
+    "nameless": "A stranger... how delicious. No name, only questions. I am the Pumpkin Oracle, keeper of secrets carved by candlelight. Ask, stranger, if you dare."
+  },
+  "answer": {
+    "thinking": "The flame stirs… the oracle is listening to the spirits.",
+    "error": "The spirits are silent tonight. Ask again, mortal."
+  },
+  "language": {
+    "label": "Language"
+  }
+}

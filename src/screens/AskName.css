@@ -1,0 +1,62 @@
+.ask-name-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: transparent;
+}
+
+.ask-name__title{
+    font-family: var(--font-title);
+    font-size: var(--text-subtitle);
+}
+
+.name-input-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: min(90vw, 26rem);
+    margin-top: 2rem;
+}
+
+.ask-name__input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.5rem 0.25rem;
+    border: none;
+    border-bottom: 1px solid var(--mood-core);
+    background-color: transparent;
+    color: var(--color-bone);
+    font-family: var(--font-oracle);
+    font-size: var(--text-input);
+    outline: none;
+}
+
+.ask-name__input::placeholder {
+    color: var(--color-bone-dim);
+    font-style: italic;
+}
+
+.ask-name__input:focus {
+    border-bottom-color: var(--color-flame);
+}
+
+
+.ask-name__button{
+    border: 1px solid #5f5e5f63;
+    text-transform: uppercase;
+    font-size: var(--text-input);
+    margin-top: 2.5rem;
+}
+.ask-nameless__button{
+    border: none;
+    background-color: transparent;
+    text-transform: uppercase;
+    font-size: var(--text-input);
+}
+.ask-name__error {
+    margin-top: 0.75rem;
+    color: var(--color-flame);
+    font-style: italic;
+}
