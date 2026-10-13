@@ -5,7 +5,7 @@ import QuestionInput from '@/components/overlay/QuestionInput'
 import OracleAnswer from '@/components/overlay/OracleAnswer'
 import { askOracle } from '@/services/oracle'
 import { fetchSpeech } from '@/services/voice'
-import { connectLipSync } from '@/services/lipSync'
+import { connectLipSync, stopLipSync } from '@/services/lipSync'
 import './OracleScreen.css'
 
 export default function OracleScreen({ userName }) {
@@ -25,21 +25,31 @@ export default function OracleScreen({ userName }) {
   }, [status])
 
   // Si se sale de la pantalla a mitad de frase, la voz se calla
-  useEffect(() => () => audioRef.current?.pause(), [])
+  useEffect(
+    () => () => {
+      audioRef.current?.pause()
+      stopLipSync()
+    },
+    [],
+  )
 
   // Reproduce la voz; la promesa termina cuando el oráculo deja de hablar
   const speak = async (text) => {
-    const { src } = await fetchSpeech(text)
+    const { src, alignment } = await fetchSpeech(text)
     const audio = new Audio(src)
     audioRef.current = audio
-    // El volumen de esta voz moverá la boca; si falla, se oye igual con el clip 'hablar'
-    await connectLipSync(audio).catch((error) => console.warn('[lip-sync]', error))
-    await new Promise((resolve, reject) => {
-      audio.onended = resolve
-      audio.onerror = reject
-      audio.onplay = () => setStatus('speaking') // el clip 'hablar' empieza con el sonido
-      audio.play().catch(reject)
-    })
+    // Los tiempos de cada letra moverán la boca; si falla, se oye igual con el clip 'hablar'
+    await connectLipSync(audio, alignment).catch((error) => console.warn('[lip-sync]', error))
+    try {
+      await new Promise((resolve, reject) => {
+        audio.onended = resolve
+        audio.onerror = reject
+        audio.onplay = () => setStatus('speaking') // el clip 'hablar' empieza con el sonido
+        audio.play().catch(reject)
+      })
+    } finally {
+      stopLipSync()
+    }
   }
 
   // Muestra el texto y lo dice en voz alta; si falla la voz, se queda solo el texto

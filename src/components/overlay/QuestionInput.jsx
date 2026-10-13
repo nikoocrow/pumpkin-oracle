@@ -28,19 +28,28 @@ export default function QuestionInput({ onAsk }) {
   const [question, setQuestion] = useState('')
   const speech = useSpeechRecognition(i18n.language)
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const trimmed = question.trim()
+  const send = (text) => {
+    const trimmed = text.trim()
     if (!trimmed) return
     speech.cancel() // si seguía dictando, que no vuelva a escribir en el input ya vacío
     onAsk(trimmed)
     setQuestion('')
   }
 
-  const toggleMic = () => (speech.listening ? speech.stop() : speech.start(setQuestion))
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    send(question)
+  }
+
+  // Al dejar de hablar (pausa o al pulsar de nuevo) la pregunta se envía sola
+  const toggleMic = () => (speech.listening ? speech.stop() : speech.start(setQuestion, send))
 
   return (
     <form className="question" onSubmit={handleSubmit}>
+      <p className="question__error" role="status" aria-live="polite">
+        {speech.error && t(`question.micError.${speech.error}`)}
+      </p>
+
       <input
         className="question__input"
         type="text"
@@ -48,7 +57,10 @@ export default function QuestionInput({ onAsk }) {
         placeholder={speech.listening ? t('question.listening') : t('question.placeholder')}
         value={question}
         maxLength={200}
-        onChange={(e) => setQuestion(e.target.value)}
+        onChange={(e) => {
+          setQuestion(e.target.value)
+          speech.clearError()
+        }}
       />
 
       {speech.supported && (

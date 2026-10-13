@@ -19,7 +19,14 @@
     "listening": "El oráculo te escucha…",
     "speak": "Di tu pregunta",
     "stopSpeaking": "Dejar de escuchar",
-    "send": "Preguntar"
+    "send": "Preguntar",
+    "micError": {
+      "denied": "El oráculo no puede oírte: permite el acceso al micrófono.",
+      "noMic": "No encuentro ningún micrófono, mortal.",
+      "noSpeech": "Solo oigo silencio… inténtalo de nuevo.",
+      "network": "Los espíritus de la red no responden. Escribe tu pregunta.",
+      "generic": "El micrófono falló. Escribe tu pregunta."
+    }
   },
   "greeting": {
     "named": "Ah, {{name}}... Te estaba esperando. Soy el Oráculo Calabaza, guardián de secretos tallados a la luz de las velas. Pregunta, y responderé.",

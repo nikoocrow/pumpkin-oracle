@@ -19,7 +19,14 @@
     "listening": "L'oracle t'écoute…",
     "speak": "Dis ta question",
     "stopSpeaking": "Arrêter l'écoute",
-    "send": "Demander"
+    "send": "Demander",
+    "micError": {
+      "denied": "L'oracle ne t'entend pas : autorise l'accès au micro.",
+      "noMic": "Aucun micro trouvé, mortel.",
+      "noSpeech": "Seul le silence… réessaie.",
+      "network": "Les esprits du réseau se taisent. Écris ta question.",
+      "generic": "Le micro a échoué. Écris ta question."
+    }
   },
   "greeting": {
     "named": "Ah, {{name}}... Je t'attendais. Je suis l'Oracle Citrouille, gardien des secrets sculptés à la lueur des bougies. Demande, et je répondrai.",

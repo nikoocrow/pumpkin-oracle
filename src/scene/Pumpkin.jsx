@@ -2,12 +2,12 @@ import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { useFrame } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
-import { getVoiceLevel, LIP_SYNC } from '@/services/lipSync'
+import { getMouthTarget, LIP_SYNC } from '@/services/lipSync'
 import { moods, DEFAULT_MOOD } from '@/theme/moods'
 import { setupLights } from './three/world/setupLights'
 import { setupFire } from './three/world/setupFire'
 import { setupMoodTint, applyMoodTint } from './three/effects/MoodTint'
-import { LOOK_AT } from './three/config'
+import { LOOK_AT, MODEL_OFFSET_Y } from './three/config'
 
 const MODEL_URL = '/models/pumpkin_oracle.glb'
 
@@ -26,6 +26,17 @@ function prepareScene(scene) {
     if (obj.isLight) (INTERIOR_LIGHTS.includes(obj.name) ? interior : lights).push(obj)
   })
   interior.forEach((light) => light.removeFromParent())
+
+  // Sube solo la calabaza (no el suelo ni las velas). Su posición la anima el clip, así que
+  // va dentro de un grupo elevado: el clip mueve la calabaza y el grupo le suma la altura
+  const pumpkin = scene.getObjectByName('Pumpkin')
+  if (pumpkin) {
+    const lift = new THREE.Group()
+    lift.name = 'Pumpkin_Lift'
+    lift.position.y = MODEL_OFFSET_Y
+    pumpkin.parent.add(lift)
+    lift.add(pumpkin)
+  }
 
   setupLights(lights)
   setupFire(scene)
@@ -54,20 +65,21 @@ export default function Pumpkin({ animation = 'idle', mood = DEFAULT_MOOD }) {
     return found
   }, [scene])
 
-  // Lip-sync combinado: mientras habla, la boca mezcla el clip 'hablar' con el volumen de la voz.
+  // Lip-sync: mientras habla, la boca sigue las letras de la voz encima del clip 'hablar'.
   // Se registra después de useAnimations, así corre justo tras el mixer y lee lo que dejó el clip.
-  const voiceLevel = useRef(0)
-  useFrame(() => {
-    if (!LIP_SYNC.enabled || animation !== 'hablar') {
-      voiceLevel.current = 0
-      return // fuera de 'hablar', la boca es solo del clip
+  const mouthLevel = useRef(0)
+  useFrame((_, delta) => {
+    const target = LIP_SYNC.enabled && animation === 'hablar' ? getMouthTarget() : null
+    if (target === null) {
+      mouthLevel.current = 0
+      return // fuera de 'hablar' (o sin datos de la voz), la boca es solo del clip
     }
-    const target = getVoiceLevel()
-    const speed = target > voiceLevel.current ? LIP_SYNC.attack : LIP_SYNC.release
-    voiceLevel.current += (target - voiceLevel.current) * speed
+    // Suavizado con delta: se mueve igual de rápido a 60 que a 120 fps
+    const rate = target > mouthLevel.current ? LIP_SYNC.attack : LIP_SYNC.release
+    mouthLevel.current += (target - mouthLevel.current) * (1 - Math.exp(-rate * delta))
 
-    // Nivel 0–1 → rango del morph (cerrada en silencio, abierta en los golpes de voz)
-    const voiceWeight = LIP_SYNC.closed + voiceLevel.current * (LIP_SYNC.open - LIP_SYNC.closed)
+    // Apertura 0–1 → rango del morph (cerrada en silencio, abierta en las vocales)
+    const voiceWeight = LIP_SYNC.closed + mouthLevel.current * (LIP_SYNC.open - LIP_SYNC.closed)
     mouths.forEach(({ mesh, index }) => {
       const clipWeight = mesh.morphTargetInfluences[index]
       mesh.morphTargetInfluences[index] = clipWeight + (voiceWeight - clipWeight) * LIP_SYNC.mix
@@ -122,8 +134,9 @@ export default function Pumpkin({ animation = 'idle', mood = DEFAULT_MOOD }) {
   useFrame((_, delta) => {
     if (!head) return
     const following = LOOK_AT.enabled && animation === 'idle'
-    const targetYaw = following ? pointer.current.x * LOOK_AT.maxYaw : 0
-    const targetPitch = following ? -pointer.current.y * LOOK_AT.maxPitch : 0
+    const headFollowing = following && LOOK_AT.head
+    const targetYaw = headFollowing ? pointer.current.x * LOOK_AT.maxYaw : 0
+    const targetPitch = headFollowing ? -pointer.current.y * LOOK_AT.maxPitch : 0
 
     const l = look.current
     const t = 1 - Math.exp(-LOOK_AT.smoothing * delta)

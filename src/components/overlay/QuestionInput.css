@@ -41,6 +41,21 @@
   font-style: italic;
 }
 
+/* Aviso del micrófono: flota justo encima de la barra sin empujar nada */
+.question__error {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 0.625rem);
+  margin: 0;
+  color: var(--color-ember);
+  font-family: var(--font-oracle);
+  font-size: var(--text-hint);
+  font-style: italic;
+  text-align: center;
+  pointer-events: none;
+}
+
 /* ── Botones redondos ───────────────────────────────── */
 .question__mic,
 .question__send {

@@ -19,7 +19,14 @@
     "listening": "The oracle is listening…",
     "speak": "Speak your question",
     "stopSpeaking": "Stop listening",
-    "send": "Ask"
+    "send": "Ask",
+    "micError": {
+      "denied": "The oracle cannot hear you: allow microphone access.",
+      "noMic": "No microphone found, mortal.",
+      "noSpeech": "Only silence… try again.",
+      "network": "The network spirits are silent. Type your question.",
+      "generic": "The microphone failed. Type your question."
+    }
   },
   "greeting": {
     "named": "Ah, {{name}}... I have been waiting for you. I am the Pumpkin Oracle, keeper of secrets carved by candlelight. Ask, and I shall answer.",

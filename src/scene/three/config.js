@@ -7,6 +7,10 @@ export const MODEL_URLS = ['models/pumpkin_oracle.glb', 'public/models/pumpkin_o
 
 export const DEFAULT_STATE = 'idle'
 
+// Altura extra de la calabaza (unidades de Blender: 1 = 1 m). Suelo, velas y cámara no se mueven.
+// Se aplica al cargar el modelo: recarga la página para ver el cambio
+export const MODEL_OFFSET_Y = 0.15
+
 // Cada estado = un clip del GLB (exportado desde las pistas NLA de Blender).
 // emberRate: chispas por segundo que salen de la boca
 export const STATES = {
@@ -63,6 +67,7 @@ export const IGNITION = {
 // La calabaza sigue al cursor en idle (se suma al giro del clip, no lo reemplaza)
 export const LOOK_AT = {
   enabled: true,
+  head: false, // false = solo los ojos siguen al cursor; true = también gira la cabeza
   maxYaw: 0.35, // giro izquierda/derecha máximo (radianes, ~20°)
   maxPitch: 0.15, // giro arriba/abajo máximo (radianes, ~9°)
   smoothing: 4, // qué tan rápido persigue al cursor (más = más rápido)
