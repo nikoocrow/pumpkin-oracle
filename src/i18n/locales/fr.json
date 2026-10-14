@@ -153,5 +153,13 @@
     "left_one": "Il reste {{count}} bougie",
     "left_other": "Il reste {{count}} bougies",
     "countdown": "L’oracle s’éveillera dans"
+  },
+  "share": {
+    "label": "Partage l’oracle",
+    "wait": "En attendant, partage l’oracle",
+    "on": "Partager sur {{network}}",
+    "text": "J’ai consulté l’Oracle Citrouille 🎃 Oseras-tu l’interroger ?",
+    "copied": "Lien copié : colle-le dans {{network}}.",
+    "copyFailed": "Copie ce lien : {{url}}"
   }
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import ShareBar from './ShareBar'
 import './CandleCountdown.css'
 
 const pad = (n) => String(n).padStart(2, '0')
@@ -24,6 +25,8 @@ export default function CandleCountdown({ resetAt, anchorRef }) {
     <div ref={anchorRef} className="countdown" role="timer">
       <span className="countdown__label">{t('candles.countdown')}</span>
       <span className="countdown__time">{time}</span>
+      {/* Sin velas no queda nada que hacer: buen momento para compartir */}
+      <ShareBar className="countdown__share" label={t('share.wait')} />
     </div>
   )
 }

@@ -27,9 +27,9 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
-  // Funciones serverless de Vercel: corren en Node, no en el navegador
+  // Funciones serverless de Vercel y configuración de Vite: corren en Node, no en el navegador
   {
-    files: ['api/**/*.js'],
+    files: ['api/**/*.js', 'vite.config.js'],
     languageOptions: { globals: globals.node },
   },
 ])

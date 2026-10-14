@@ -153,5 +153,13 @@
     "left_one": "{{count}} candle left",
     "left_other": "{{count}} candles left",
     "countdown": "The oracle awakens in"
+  },
+  "share": {
+    "label": "Share the oracle",
+    "wait": "While you wait, share the oracle",
+    "on": "Share on {{network}}",
+    "text": "I consulted the Pumpkin Oracle 🎃 Do you dare to ask it?",
+    "copied": "Link copied: paste it into {{network}}.",
+    "copyFailed": "Copy this link: {{url}}"
   }
 }

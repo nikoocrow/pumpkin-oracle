@@ -30,6 +30,10 @@
   margin-bottom: 1rem;
 }
 
+.intro__share {
+  margin-top: 1.5rem;
+}
+
 .intro__hint {
   text-align: center;
   font-family: var(--font-oracle);

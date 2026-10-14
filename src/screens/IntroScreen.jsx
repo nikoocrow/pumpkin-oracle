@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import ShareBar from '@/components/overlay/ShareBar'
 import './IntroScreen.css'
 
 export default function Puerta({ onStart }) {
@@ -12,6 +13,7 @@ export default function Puerta({ onStart }) {
         {t('intro.ctaText')}
       </button>
       <p className="intro__hint">{t('intro.hint')}</p>
+      <ShareBar className="intro__share" label={t('share.label')} />
     </section>
   )
 }

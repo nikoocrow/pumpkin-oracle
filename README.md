@@ -66,6 +66,12 @@ Cada pregunta o lectura de cartas gasta una de las 5 velas de la escena. Al gast
 - **Voz**: `/api/speak` nunca pone voz a un texto del navegador: solo a la respuesta que guardó `/api/oracle` (un id de un solo uso), al saludo (lo escribe el servidor con los locales) y a la risa; saludo y risa tienen un tope diario.
 - **Local**: `vercel dev` con `KV_REST_API_URL` y `KV_REST_API_TOKEN` en `.env` (ver `.env.example`).
 
+## Compartir
+
+`ShareBar` (en la intro y junto a la cuenta atrás sin velas) comparte en LinkedIn y Facebook con sus enlaces oficiales. Instagram y TikTok no tienen enlace para compartir desde la web: en el móvil se abre el menú de compartir del sistema y en el ordenador se copia el enlace. Cada botón muestra cuántas veces se ha pulsado (`/api/share`, en Redis; una vez por visitante, red y día).
+
+La vista previa del enlace (título, descripción e imagen `public/og-image.png`, 1200×630) son las etiquetas `og:` de `index.html`; `vite.config.js` pone la URL absoluta según el entorno de Vercel.
+
 ## Escena 3D
 
 React solo pinta la interfaz HTML. La escena es Three.js puro en `src/Experience/`, y `ExperienceCanvas` le habla a través de `World`:

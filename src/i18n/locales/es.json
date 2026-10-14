@@ -153,5 +153,13 @@
     "left_one": "Queda {{count}} vela",
     "left_other": "Quedan {{count}} velas",
     "countdown": "El oráculo despertará en"
+  },
+  "share": {
+    "label": "Comparte el oráculo",
+    "wait": "Mientras esperas, comparte el oráculo",
+    "on": "Compartir en {{network}}",
+    "text": "Consulté al Oráculo Calabaza 🎃 ¿Te atreves a preguntarle?",
+    "copied": "Enlace copiado: pégalo en {{network}}.",
+    "copyFailed": "Copia este enlace: {{url}}"
   }
 }
