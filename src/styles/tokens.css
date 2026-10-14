@@ -27,9 +27,10 @@
   --color-crimson: #ff3b2f;
 
   /* ── Familias ──────────────────────────────────────── */
-  --font-title: 'Pirata One', 'Times New Roman', serif;
-  --font-oracle: 'Cormorant Garamond', Georgia, serif;
-  --font-ui: 'Manrope', system-ui, sans-serif;
+  /* Las coreanas van detrás: solo dibujan lo que las latinas no tienen (el hangul) */
+  --font-title: 'Pirata One', 'Song Myung', 'Times New Roman', serif;
+  --font-oracle: 'Cormorant Garamond', 'Nanum Myeongjo', Georgia, serif;
+  --font-ui: 'Manrope', 'Noto Sans KR', system-ui, sans-serif;
 
   /* ── Escala tipográfica ────────────────────────────────
    * Fluida entre 375px (móvil) y 1440px (escritorio):

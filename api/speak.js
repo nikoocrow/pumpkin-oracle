@@ -14,6 +14,7 @@ const GREETINGS = {
   en: require('../src/i18n/locales/en.json').greeting,
   es: require('../src/i18n/locales/es.json').greeting,
   fr: require('../src/i18n/locales/fr.json').greeting,
+  ko: require('../src/i18n/locales/ko.json').greeting,
 }
 
 function greetingText(language, userName) {
@@ -29,6 +30,7 @@ const LAUGHS = {
   es: '[mischievously] [starts laughing] Ja, ja, ja... [laughs harder] ¡JA, JA, JA, JAAA! [laughs]',
   en: '[mischievously] [starts laughing] Ha, ha, ha... [laughs harder] HA, HA, HA, HAAA! [laughs]',
   fr: '[mischievously] [starts laughing] Ha, ha, ha... [laughs harder] HA, HA, HA, HAAA ! [laughs]',
+  ko: '[mischievously] [starts laughing] 크크크... [laughs harder] 하하하하! 하하하하하! [laughs]',
 }
 // Se prueba en orden: si la cuenta no tiene acceso a un modelo, pasa al siguiente.
 // El último (sin etiquetas) solo lee el texto, pero al menos suena

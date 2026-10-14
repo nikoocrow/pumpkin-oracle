@@ -47,8 +47,20 @@ const SHAPE_OF = { a: 'a', o: 'o', e: 'e', i: 'i', y: 'i', u: 'u' }
 for (const c of 'mbp') SHAPE_OF[c] = 'labial'
 for (const c of 'fv') SHAPE_OF[c] = 'labiodental'
 
+// Coreano: cada sílaba (가–힣) es un solo carácter que lleva dentro su vocal. Su forma de boca
+// es la de esa vocal, en el orden de Unicode: ㅏ ㅐ ㅑ ㅒ ㅓ ㅔ ㅕ ㅖ ㅗ ㅘ ㅙ ㅚ ㅛ ㅜ ㅝ ㅞ ㅟ ㅠ ㅡ ㅢ ㅣ
+const HANGUL_FIRST = 0xac00
+const HANGUL_LAST = 0xd7a3
+const HANGUL_VOWELS = 'aeaeoeoeoaeeouoeiuiii'
+
 // Tipo de sonido de una letra (clave de MOUTH_SHAPES); null en espacios y puntuación
 function shapeOf(char) {
+  const code = char.codePointAt(0)
+  if (code >= HANGUL_FIRST && code <= HANGUL_LAST) {
+    // Sílaba = inicial × 588 + vocal × 28 + final
+    return SHAPE_OF[HANGUL_VOWELS[Math.floor(((code - HANGUL_FIRST) % 588) / 28)]]
+  }
+
   const letter = char
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '') // á → a, ñ → n, ç → c

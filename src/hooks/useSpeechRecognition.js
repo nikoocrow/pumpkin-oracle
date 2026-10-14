@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 
 // El reconocimiento acierta más con la variante regional que con el idioma a secas
-const LOCALES = { en: 'en-US', es: 'es-ES', fr: 'fr-FR' }
+const LOCALES = { en: 'en-US', es: 'es-ES', fr: 'fr-FR', ko: 'ko-KR' }
 
 // Agrupa los códigos de error de la API en los pocos casos que merece la pena explicar
 const ERRORS = {

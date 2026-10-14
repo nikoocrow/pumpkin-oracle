@@ -35,7 +35,7 @@ src/
   screens/          intro, name, idle, thinking, speaking, credits
   services/         IA, voz / micrófono, desbloqueo de audio, estado "pensando"
   i18n/             configuración de i18next
-    locales/        en.json, es.json, fr.json
+    locales/        en.json, es.json, fr.json, ko.json
   styles/
     tokens.css      variables CSS (color, tipografía, movimiento, ánimos)
     globals.css     reset + estilos base
@@ -72,11 +72,11 @@ React solo pinta la interfaz HTML. La escena es Three.js puro en `src/Experience
 
 ```js
 world.setAnimation('hablar') // 'idle' | 'hablar' | 'reir'
-world.setGaze('table')       // 'free' | 'table' | 'camera'
-world.setMood('thinking')    // ánimos de theme/moods.js
-world.setCandles(3)          // velas encendidas (0–5), con fundido
-world.startTarot()           // la cámara pasa a la mesa y se reparten las cartas
-world.deck                   // lectura, barajar y bloqueo de la baraja
+world.setGaze('table') // 'free' | 'table' | 'camera'
+world.setMood('thinking') // ánimos de theme/moods.js
+world.setCandles(3) // velas encendidas (0–5), con fundido
+world.startTarot() // la cámara pasa a la mesa y se reparten las cartas
+world.deck // lectura, barajar y bloqueo de la baraja
 ```
 
 En desarrollo, `window.experience` da acceso a todo desde la consola.
@@ -97,4 +97,4 @@ Los colores existen dos veces (`tokens.css` y `theme/colors.js`); al cambiar uno
 
 ## Idioma
 
-Por defecto `en`; soportados `en`, `es` y `fr`. El idioma elegido se guarda en `localStorage` con la clave `oraculo-lang`.
+Por defecto `en`; soportados `en`, `es`, `fr` y `ko`. El idioma elegido se guarda en `localStorage` con la clave `oraculo-lang`.

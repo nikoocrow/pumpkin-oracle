@@ -3,8 +3,9 @@ import { initReactI18next } from 'react-i18next'
 import en from './locales/en.json'
 import es from './locales/es.json'
 import fr from './locales/fr.json'
+import ko from './locales/ko.json'
 
-export const SUPPORTED_LANGUAGES = ['en', 'es', 'fr']
+export const SUPPORTED_LANGUAGES = ['en', 'es', 'fr', 'ko']
 export const DEFAULT_LANGUAGE = 'en'
 const STORAGE_KEY = 'oraculo-lang'
 
@@ -30,6 +31,7 @@ i18n.use(initReactI18next).init({
     en: { translation: en },
     es: { translation: es },
     fr: { translation: fr },
+    ko: { translation: ko },
   },
   lng: readStoredLanguage() ?? DEFAULT_LANGUAGE,
   fallbackLng: DEFAULT_LANGUAGE,

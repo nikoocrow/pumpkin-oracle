@@ -16,11 +16,15 @@ import './OracleScreen.css'
 // Duración del clip 'reir': lo que dura la risa si no hay audio
 const LAUGH_CLIP_MS = 4000
 
-// Tiempo que falta (ms) como "14 h 32 min" / "8 min"
-function formatWait(ms) {
+// Tiempo que falta (ms) en el idioma del jugador: "14 h 32 min", "14시간 32분"…
+function formatWait(ms, language) {
+  const unit = (value, name) =>
+    new Intl.NumberFormat(language, { style: 'unit', unit: name, unitDisplay: 'short' }).format(
+      value,
+    )
   const minutes = Math.max(1, Math.ceil(ms / 60000))
   const hours = Math.floor(minutes / 60)
-  return hours ? `${hours} h ${minutes % 60} min` : `${minutes} min`
+  return hours ? `${unit(hours, 'hour')} ${unit(minutes % 60, 'minute')}` : unit(minutes, 'minute')
 }
 
 // Cuenta atrás hasta que vuelven las velas: se actualiza al cambiar resetAt y cada 30 s.
@@ -104,7 +108,7 @@ export default function OracleScreen({ userName }) {
   }, [])
   useEffect(loadCandles, [loadCandles])
   const wait = useWait(candles?.resetAt, loadCandles)
-  const waitText = t('candles.out', { time: formatWait(wait) })
+  const waitText = t('candles.out', { time: formatWait(wait, i18n.resolvedLanguage) })
 
   // La risa suena con la misma voz. Se precarga al entrar (y al cambiar de idioma)
   // para que empiece a la vez que la animación

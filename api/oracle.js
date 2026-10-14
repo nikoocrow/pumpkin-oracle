@@ -18,11 +18,12 @@ Tone: mysterious and playful, warm at heart. Never ominous, cruel or negative: e
 At most 90 words in total. Plain text only: no markdown, no lists, no asterisks, no emojis (your words are shown on screen and spoken aloud).`
 
 // Idiomas de la interfaz: el oráculo responde en el elegido, aunque le escriban en otro
-const LANGUAGES = { en: 'English', es: 'Spanish', fr: 'French' }
+const LANGUAGES = { en: 'English', es: 'Spanish', fr: 'French', ko: 'Korean' }
 const REFUSALS = {
   en: 'The spirits refuse to answer that one...',
   es: 'Los espíritus se niegan a responder eso...',
   fr: 'Les esprits refusent de répondre à cela...',
+  ko: '영혼들이 그 질문에는 답하기를 거부하는구나...',
 }
 
 // El nombre llega del navegador: se acepta solo si es un texto corto, si no se trata como anónimo
