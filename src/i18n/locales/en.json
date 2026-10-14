@@ -29,8 +29,12 @@
     }
   },
   "greeting": {
-    "named": "Ah, {{name}}... I have been waiting for you. I am the Pumpkin Oracle, keeper of secrets carved by candlelight. Ask, and I shall answer.",
-    "nameless": "A stranger... how delicious. No name, only questions. I am the Pumpkin Oracle, keeper of secrets carved by candlelight. Ask, stranger, if you dare."
+    "named": "Ah, {{name}}... I have been waiting for you. I am the Pumpkin Oracle, keeper of secrets carved by candlelight. Ask, and I shall answer. Or, if you prefer, let the tarot cards speak for you.",
+    "nameless": "A stranger... how delicious. No name, only questions. I am the Pumpkin Oracle, keeper of secrets carved by candlelight. Ask, stranger, if you dare. Or, if you prefer, let the tarot cards speak for you."
+  },
+  "choice": {
+    "label": "What do you wish, mortal?",
+    "chat": "Talk to the oracle"
   },
   "answer": {
     "thinking": "The flame stirs… the oracle is listening to the spirits.",
@@ -38,5 +42,114 @@
   },
   "language": {
     "label": "Language"
+  },
+  "tarot": {
+    "offer": "Read the tarot",
+    "eyebrow": "Three-card reading",
+    "title": "Choose your cards",
+    "hint": "Tap up to 3 cards from the fan. Tap them again to return them.",
+    "hintFull": "Your reading is complete. Tap a card to change it.",
+    "shuffle": "Shuffle again",
+    "full": "You can only choose 3 cards",
+    "positions": {
+      "past": "Past",
+      "present": "Present",
+      "future": "Future"
+    }
+  },
+  "cards": {
+    "fool": {
+      "name": "The Fool",
+      "meaning": "A leap of faith; begin without fear."
+    },
+    "magician": {
+      "name": "The Magician",
+      "meaning": "You have the tools; use them."
+    },
+    "highPriestess": {
+      "name": "The High Priestess",
+      "meaning": "Intuition and hidden knowledge."
+    },
+    "empress": {
+      "name": "The Empress",
+      "meaning": "Abundance, creativity and care."
+    },
+    "emperor": {
+      "name": "The Emperor",
+      "meaning": "Structure, order and leadership."
+    },
+    "hierophant": {
+      "name": "The Hierophant",
+      "meaning": "Tradition, guidance and learning."
+    },
+    "lovers": {
+      "name": "The Lovers",
+      "meaning": "A choice born from the heart."
+    },
+    "chariot": {
+      "name": "The Chariot",
+      "meaning": "Determination and steady progress."
+    },
+    "strength": {
+      "name": "Strength",
+      "meaning": "Quiet courage and self-control."
+    },
+    "hermit": {
+      "name": "The Hermit",
+      "meaning": "Look within to see clearly."
+    },
+    "wheelOfFortune": {
+      "name": "Wheel of Fortune",
+      "meaning": "Cycles and unexpected turns."
+    },
+    "justice": {
+      "name": "Justice",
+      "meaning": "Balance, truth and consequences."
+    },
+    "hangedMan": {
+      "name": "The Hanged Man",
+      "meaning": "A pause and a new perspective."
+    },
+    "death": {
+      "name": "Death",
+      "meaning": "An ending that opens a new beginning."
+    },
+    "temperance": {
+      "name": "Temperance",
+      "meaning": "Patience and the middle path."
+    },
+    "devil": {
+      "name": "The Devil",
+      "meaning": "Ties worth looking at again."
+    },
+    "tower": {
+      "name": "The Tower",
+      "meaning": "Sudden change that sets you free."
+    },
+    "star": {
+      "name": "The Star",
+      "meaning": "Hope and renewal."
+    },
+    "moon": {
+      "name": "The Moon",
+      "meaning": "Dreams, doubts and imagination."
+    },
+    "sun": {
+      "name": "The Sun",
+      "meaning": "Joy, success and clarity."
+    },
+    "experienceApprentice": {
+      "name": "Experience Apprentice",
+      "meaning": "Every experience is a new lesson."
+    },
+    "experienceCreator": {
+      "name": "Experience Creator",
+      "meaning": "You turn ideas into living experiences."
+    }
+  },
+  "candles": {
+    "out": "The candles have burned out… Return in {{time}}, mortal.",
+    "left_one": "{{count}} candle left",
+    "left_other": "{{count}} candles left"
   }
 }

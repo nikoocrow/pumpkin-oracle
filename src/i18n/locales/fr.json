@@ -29,8 +29,12 @@
     }
   },
   "greeting": {
-    "named": "Ah, {{name}}... Je t'attendais. Je suis l'Oracle Citrouille, gardien des secrets sculptés à la lueur des bougies. Demande, et je répondrai.",
-    "nameless": "Un étranger... quel délice. Pas de nom, seulement des questions. Je suis l'Oracle Citrouille, gardien des secrets sculptés à la lueur des bougies. Demande, étranger, si tu l'oses."
+    "named": "Ah, {{name}}... Je t'attendais. Je suis l'Oracle Citrouille, gardien des secrets sculptés à la lueur des bougies. Demande, et je répondrai. Ou, si tu préfères, laisse les cartes du tarot parler pour toi.",
+    "nameless": "Un étranger... quel délice. Pas de nom, seulement des questions. Je suis l'Oracle Citrouille, gardien des secrets sculptés à la lueur des bougies. Demande, étranger, si tu l'oses. Ou, si tu préfères, laisse les cartes du tarot parler pour toi."
+  },
+  "choice": {
+    "label": "Que désires-tu, mortel ?",
+    "chat": "Parler à l'oracle"
   },
   "answer": {
     "thinking": "La flamme frémit… l'oracle écoute les esprits.",
@@ -38,5 +42,114 @@
   },
   "language": {
     "label": "Langue"
+  },
+  "tarot": {
+    "offer": "Lire le tarot",
+    "eyebrow": "Tirage en trois cartes",
+    "title": "Choisis tes cartes",
+    "hint": "Touche jusqu'à 3 cartes de l'éventail. Touche-les à nouveau pour les rendre.",
+    "hintFull": "Ton tirage est complet. Touche une carte pour la changer.",
+    "shuffle": "Rebattre",
+    "full": "Tu ne peux choisir que 3 cartes",
+    "positions": {
+      "past": "Passé",
+      "present": "Présent",
+      "future": "Futur"
+    }
+  },
+  "cards": {
+    "fool": {
+      "name": "Le Mat",
+      "meaning": "Un saut dans l'inconnu ; commencer sans peur."
+    },
+    "magician": {
+      "name": "Le Bateleur",
+      "meaning": "Tu as les outils ; sers-t'en."
+    },
+    "highPriestess": {
+      "name": "La Papesse",
+      "meaning": "Intuition et savoir caché."
+    },
+    "empress": {
+      "name": "L'Impératrice",
+      "meaning": "Abondance, créativité et soin."
+    },
+    "emperor": {
+      "name": "L'Empereur",
+      "meaning": "Structure, ordre et autorité."
+    },
+    "hierophant": {
+      "name": "Le Pape",
+      "meaning": "Tradition, guide et apprentissage."
+    },
+    "lovers": {
+      "name": "L'Amoureux",
+      "meaning": "Un choix qui naît du cœur."
+    },
+    "chariot": {
+      "name": "Le Chariot",
+      "meaning": "Détermination et avancée ferme."
+    },
+    "strength": {
+      "name": "La Force",
+      "meaning": "Courage serein et maîtrise de soi."
+    },
+    "hermit": {
+      "name": "L'Hermite",
+      "meaning": "Regarder en soi pour y voir clair."
+    },
+    "wheelOfFortune": {
+      "name": "La Roue de Fortune",
+      "meaning": "Cycles et tournants inattendus."
+    },
+    "justice": {
+      "name": "La Justice",
+      "meaning": "Équilibre, vérité et conséquences."
+    },
+    "hangedMan": {
+      "name": "Le Pendu",
+      "meaning": "Une pause et un nouveau regard."
+    },
+    "death": {
+      "name": "La Mort",
+      "meaning": "Une fin qui ouvre un nouveau départ."
+    },
+    "temperance": {
+      "name": "La Tempérance",
+      "meaning": "Patience et juste milieu."
+    },
+    "devil": {
+      "name": "Le Diable",
+      "meaning": "Des liens qu'il vaut mieux revoir."
+    },
+    "tower": {
+      "name": "La Tour",
+      "meaning": "Un changement soudain qui libère."
+    },
+    "star": {
+      "name": "L'Étoile",
+      "meaning": "Espoir et renouveau."
+    },
+    "moon": {
+      "name": "La Lune",
+      "meaning": "Rêves, doutes et imagination."
+    },
+    "sun": {
+      "name": "Le Soleil",
+      "meaning": "Joie, réussite et clarté."
+    },
+    "experienceApprentice": {
+      "name": "Apprenti d'expériences",
+      "meaning": "Chaque expérience est une nouvelle leçon."
+    },
+    "experienceCreator": {
+      "name": "Créateur d'expériences",
+      "meaning": "Tu transformes les idées en expériences vivantes."
+    }
+  },
+  "candles": {
+    "out": "Les bougies se sont consumées… Reviens dans {{time}}, mortel.",
+    "left_one": "Il reste {{count}} bougie",
+    "left_other": "Il reste {{count}} bougies"
   }
 }

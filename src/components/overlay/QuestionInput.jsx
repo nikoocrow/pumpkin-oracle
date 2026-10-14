@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
+// Copia de 128 px de pumokin-icon.png (el original pesa 1.4 MB)
+import pumpkinIcon from '@/assets/icons/pumpkin-icon.webp'
 import './QuestionInput.css'
 
 function MicIcon() {
@@ -13,17 +15,10 @@ function MicIcon() {
   )
 }
 
-function SendIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="m5 12 7-7 7 7" />
-      <path d="M12 19V5" />
-    </svg>
-  )
-}
-
 // Barra para preguntarle al oráculo: escribiendo o dictando con el micrófono.
-export default function QuestionInput({ onAsk }) {
+// disabled: bloqueada mientras el oráculo piensa (o sin velas)
+// notice: texto en lugar del placeholder (cuándo vuelven las velas)
+export default function QuestionInput({ onAsk, disabled = false, notice = null }) {
   const { t, i18n } = useTranslation()
   const [question, setQuestion] = useState('')
   const speech = useSpeechRecognition(i18n.language)
@@ -45,7 +40,7 @@ export default function QuestionInput({ onAsk }) {
   const toggleMic = () => (speech.listening ? speech.stop() : speech.start(setQuestion, send))
 
   return (
-    <form className="question" onSubmit={handleSubmit}>
+    <form className={`question${disabled ? ' is-disabled' : ''}`} onSubmit={handleSubmit}>
       <p className="question__error" role="status" aria-live="polite">
         {speech.error && t(`question.micError.${speech.error}`)}
       </p>
@@ -54,9 +49,12 @@ export default function QuestionInput({ onAsk }) {
         className="question__input"
         type="text"
         aria-label={t('question.label')}
-        placeholder={speech.listening ? t('question.listening') : t('question.placeholder')}
+        placeholder={
+          notice ?? (speech.listening ? t('question.listening') : t('question.placeholder'))
+        }
         value={question}
         maxLength={200}
+        disabled={disabled}
         onChange={(e) => {
           setQuestion(e.target.value)
           speech.clearError()
@@ -69,6 +67,7 @@ export default function QuestionInput({ onAsk }) {
           type="button"
           aria-label={speech.listening ? t('question.stopSpeaking') : t('question.speak')}
           aria-pressed={speech.listening}
+          disabled={disabled}
           onClick={toggleMic}
         >
           <MicIcon />
@@ -79,9 +78,9 @@ export default function QuestionInput({ onAsk }) {
         className="question__send"
         type="submit"
         aria-label={t('question.send')}
-        disabled={!question.trim()}
+        disabled={disabled || !question.trim()}
       >
-        <SendIcon />
+        <img className="question__send-icon" src={pumpkinIcon} alt="" />
       </button>
     </form>
   )

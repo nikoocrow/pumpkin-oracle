@@ -1,8 +1,12 @@
 import IntroScreen from '@/screens/IntroScreen'
 import AskName from '@/screens/AskName'
-import OracleScreen from '@/screens/OracleScreen'
 import LanguageSwitcher from '@/components/overlay/LanguageSwitcher'
-import { useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
+
+// La escena 3D (three, R3F, postprocesado, modelos) va en su propio archivo: la intro carga
+// enseguida y la escena se descarga mientras el jugador lee y escribe su nombre
+const loadOracleScreen = () => import('@/screens/OracleScreen')
+const OracleScreen = lazy(loadOracleScreen)
 
 const baseStyle = {
   minHeight: '100%',
@@ -15,6 +19,10 @@ export default function App() {
   const [screen, setScreen] = useState('intro')
   const [userName, setUserName] = useState(null)
 
+  useEffect(() => {
+    loadOracleScreen()
+  }, [])
+
   const handleName = (name) => {
     setUserName(name)
     setScreen('oracle')
@@ -25,7 +33,11 @@ export default function App() {
       <LanguageSwitcher />
       {screen === 'intro' && <IntroScreen onStart={() => setScreen('askName')} />}
       {screen === 'askName' && <AskName onSubmit={handleName} />}
-      {screen === 'oracle' && <OracleScreen userName={userName} />}
+      {screen === 'oracle' && (
+        <Suspense fallback={null}>
+          <OracleScreen userName={userName} />
+        </Suspense>
+      )}
     </main>
   )
 }

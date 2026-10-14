@@ -36,3 +36,10 @@
   color: var(--color-void);
   background-color: var(--mood-core);
 }
+
+/* Bloqueado mientras el oráculo piensa */
+.language__option:disabled {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}

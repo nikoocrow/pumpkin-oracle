@@ -11,6 +11,7 @@ let cursor = 0 // última letra encontrada: el tiempo avanza, así casi nunca ha
 let context = null
 let analyser = null
 let source = null
+const sources = new WeakMap() // <audio> → su nodo: un elemento solo admite uno en toda su vida
 let samples = null
 
 // Ajustes finos de la boca
@@ -76,7 +77,8 @@ export async function connectLipSync(audio, alignment) {
 export function stopLipSync() {
   timeline = null
   cursor = 0
-  source?.disconnect()
+  // Sin desconectar: el <audio> se reutiliza y, una vez capturado por Web Audio, solo suena
+  // a través del analizador (que deja pasar el sonido)
   source = null
 }
 
@@ -91,8 +93,12 @@ async function connectAnalyser(audio) {
   // Un AudioContext creado sin interacción reciente empieza "suspended" (y mudo)
   await context.resume()
 
-  source = context.createMediaElementSource(audio)
-  source.connect(analyser)
+  if (!sources.has(audio)) {
+    const node = context.createMediaElementSource(audio)
+    node.connect(analyser)
+    sources.set(audio, node)
+  }
+  source = sources.get(audio)
 }
 
 // Apertura que toca ahora mismo, de 0 a 1; null si no hay nada que seguir (manda el clip)

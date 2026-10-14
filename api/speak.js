@@ -1,16 +1,107 @@
+import { createRequire } from 'node:module'
+import { DAILY_GREETINGS, DAILY_LAUGHS, spend, takeVoice, visitorId } from './_lib/candles.js'
+
 // Convierte la respuesta del oráculo en voz con ElevenLabs.
 // Corre en el servidor: las keys se leen de las variables de entorno.
+// Nunca pone voz a un texto que mande el navegador: solo a lo que guardó /api/oracle (por su id),
+// al saludo y a la risa, que se escriben aquí.
 const ELEVENLABS_URL = 'https://api.elevenlabs.io/v1/text-to-speech'
+const MAX_CHARS = 900
 
+// Saludo: el mismo texto que muestra la interfaz (locales), con el nombre del jugador
+const require = createRequire(import.meta.url)
+const GREETINGS = {
+  en: require('../src/i18n/locales/en.json').greeting,
+  es: require('../src/i18n/locales/es.json').greeting,
+  fr: require('../src/i18n/locales/fr.json').greeting,
+}
+
+function greetingText(language, userName) {
+  const greeting = Object.hasOwn(GREETINGS, language) ? GREETINGS[language] : GREETINGS.en
+  const name = typeof userName === 'string' ? userName.trim().slice(0, 40) : ''
+  return name ? greeting.named.replaceAll('{{name}}', name) : greeting.nameless
+}
+
+// Risa: el texto lo pone el servidor (el navegador solo dice el idioma). Los modelos v4 y v3
+// entienden etiquetas como [laughs] y producen una carcajada real, no la lectura de "jajaja".
+// Va subiendo: empieza a reír, ríe más fuerte y acaba en carcajada.
+const LAUGHS = {
+  es: '[mischievously] [starts laughing] Ja, ja, ja... [laughs harder] ¡JA, JA, JA, JAAA! [laughs]',
+  en: '[mischievously] [starts laughing] Ha, ha, ha... [laughs harder] HA, HA, HA, HAAA! [laughs]',
+  fr: '[mischievously] [starts laughing] Ha, ha, ha... [laughs harder] HA, HA, HA, HAAA ! [laughs]',
+}
+// Se prueba en orden: si la cuenta no tiene acceso a un modelo, pasa al siguiente.
+// El último (sin etiquetas) solo lee el texto, pero al menos suena
+const LAUGH_MODELS = ['eleven_v4', 'eleven_v3']
+const LAUGH_FALLBACK = { model: 'eleven_multilingual_v2', strip: /\[[^\]]*\]\s*/g }
+// Estabilidad baja = más expresiva (v3/v4 solo aceptan 0, 0.5 o 1)
+const LAUGH_SETTINGS = { stability: 0, similarity_boost: 0.75 }
+
+const toBase64 = async (response) => Buffer.from(await response.arrayBuffer()).toString('base64')
+
+async function synthesizeLaugh(voiceId, language) {
+  const text = Object.hasOwn(LAUGHS, language) ? LAUGHS[language] : LAUGHS.en
+  const attempts = [
+    ...LAUGH_MODELS.map((model) => ({ model, text, voice_settings: LAUGH_SETTINGS })),
+    { model: LAUGH_FALLBACK.model, text: text.replace(LAUGH_FALLBACK.strip, '') },
+  ]
+  for (const { model, ...body } of attempts) {
+    const response = await fetch(`${ELEVENLABS_URL}/${voiceId}?output_format=mp3_44100_128`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'xi-api-key': process.env.ELEVENLABS_API_KEY,
+      },
+      body: JSON.stringify({ ...body, model_id: model }),
+    })
+    if (response.ok) return toBase64(response)
+    console.error('[speak] risa', model, response.status, await response.text())
+  }
+  return null
+}
+
+const tooMany = () => Response.json({ error: 'The oracle needs to rest' }, { status: 429 })
+const lostVoice = (status = 502) =>
+  Response.json({ error: 'The oracle lost its voice' }, { status })
+
+// Qué puede pedir el navegador:
+//   { voice }                              → la respuesta del oráculo con ese id (una sola vez)
+//   { kind: 'greeting', language, userName } → el saludo (máx. DAILY_GREETINGS al día)
+//   { kind: 'laugh', language }            → la risa (máx. DAILY_LAUGHS al día)
 export async function POST(request) {
-  const { text } = await request.json()
+  const { voice, kind, language, userName } = await request.json()
+  const voiceId = process.env.ELEVENLABS_VOICE_ID
+  const visitor = visitorId(request)
 
-  // ElevenLabs cobra por carácter: solo aceptamos textos cortos
-  if (typeof text !== 'string' || !text.trim() || text.length > 400) {
-    return Response.json({ error: 'Invalid text' }, { status: 400 })
+  if (kind === 'laugh') {
+    try {
+      if (!(await spend(visitor, 'laughs', DAILY_LAUGHS)).allowed) return tooMany()
+      const audio = await synthesizeLaugh(voiceId, language)
+      return audio ? Response.json({ audio, alignment: null }) : lostVoice()
+    } catch (error) {
+      console.error(error)
+      return lostVoice()
+    }
   }
 
-  const voiceId = process.env.ELEVENLABS_VOICE_ID
+  let text
+  try {
+    if (kind === 'greeting') {
+      if (!(await spend(visitor, 'greetings', DAILY_GREETINGS)).allowed) return tooMany()
+      text = greetingText(language, userName)
+    } else {
+      text = await takeVoice(voice)
+    }
+  } catch (error) {
+    console.error(error) // Redis caído: sin poder comprobar, no se gasta
+    return lostVoice(503)
+  }
+
+  // ElevenLabs cobra por carácter: solo textos cortos. Las respuestas caben de sobra
+  // en 400; la lectura de las tres cartas (≤ 90 palabras) ronda 450–650, de ahí el margen
+  if (typeof text !== 'string' || !text.trim() || text.length > MAX_CHARS) {
+    return Response.json({ error: 'Invalid text' }, { status: 400 })
+  }
 
   try {
     // /with-timestamps devuelve el audio + en qué segundo suena cada letra (para sincronizar)
