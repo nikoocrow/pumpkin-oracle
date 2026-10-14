@@ -17,6 +17,7 @@ let instance = null
 //   world.setAnimation · world.setGaze · world.setMood · world.startTarot · world.deck
 export default class Experience {
   // options.ui: puente con la interfaz del tarot (World/Tarot/hudBridge.js)
+  // options.overPumpkin: ref de un elemento HTML que World coloca sobre la calabaza
   constructor(canvas, options = {}) {
     if (instance) return instance
     instance = this

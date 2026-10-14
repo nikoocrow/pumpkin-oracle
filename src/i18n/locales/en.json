@@ -2,6 +2,7 @@
   "intro": {
     "title": "The Pumpkin Oracle",
     "welcome": "Carved by moonlight, lit by a stolen flame. Ask, and the pumpkin shall answer… if it deems you worthy.",
+    "candles": "Only five candles burn for you, and each question or card reading consumes one. Use them wisely: once all five go out, the oracle falls silent and you can do nothing more until 24 hours have passed.",
     "ctaText": "Wake the Oracle",
     "hint": "The oracle hears better in silence."
   },
@@ -150,6 +151,7 @@
   "candles": {
     "out": "The candles have burned out… Return in {{time}}, mortal.",
     "left_one": "{{count}} candle left",
-    "left_other": "{{count}} candles left"
+    "left_other": "{{count}} candles left",
+    "countdown": "The oracle awakens in"
   }
 }

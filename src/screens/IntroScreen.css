@@ -1,11 +1,10 @@
-
-.intro{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: trasparent;
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: trasparent;
 }
 
 .intro__title {
@@ -17,6 +16,17 @@
   text-align: center;
   font-family: var(--font-oracle);
   font-size: var(--text-whisper);
+  margin-bottom: 1rem;
+}
+
+/* La regla de las velas: cinco preguntas, luego 24 h de silencio */
+.intro__candles {
+  max-width: 34rem;
+  text-align: center;
+  font-family: var(--font-oracle);
+  font-size: var(--text-chip);
+  font-style: italic;
+  color: var(--color-flame);
   margin-bottom: 1rem;
 }
 
@@ -41,7 +51,9 @@ button {
 
 button:hover {
   background-color: var(--mood-core);
-  color:  #000;
+  color: #000;
   font-weight: bold;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }

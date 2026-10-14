@@ -2,6 +2,7 @@
   "intro": {
     "title": "El Oráculo Calabaza",
     "welcome": "Tallada a la luz de la luna, encendida con una llama robada. Pregunta, y la calabaza responderá… si te considera digno.",
+    "candles": "Solo cinco velas arden por ti, y cada pregunta o lectura de cartas consume una. Úsalas con sabiduría: cuando se apaguen las cinco, el oráculo callará y no podrás hacer nada más hasta que pasen 24 horas.",
     "ctaText": "Despertar al Oráculo",
     "hint": "El oráculo escucha mejor en silencio."
   },
@@ -150,6 +151,7 @@
   "candles": {
     "out": "Las velas se han consumido… Vuelve en {{time}}, mortal.",
     "left_one": "Queda {{count}} vela",
-    "left_other": "Quedan {{count}} velas"
+    "left_other": "Quedan {{count}} velas",
+    "countdown": "El oráculo despertará en"
   }
 }

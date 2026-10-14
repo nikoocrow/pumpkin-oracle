@@ -101,8 +101,26 @@ export default class World {
     }
 
     this.pumpkin?.update()
+    this.updateOverPumpkin()
     this.table.update()
     if (this.deckReady) this.deck.update(this.time.elapsed)
+  }
+
+  // El elemento HTML de options.overPumpkin (la cuenta atrás sin velas) flota sobre la cabeza
+  // de la calabaza: se lleva su punto a la pantalla en cada fotograma
+  updateOverPumpkin() {
+    const el = this.experience.options.overPumpkin?.current
+    if (!el) return
+    const point = this.pumpkin?.topPoint()
+    if (point) point.project(this.camera.instance)
+    // Detrás de la cámara (z > 1) o sin calabaza todavía: oculto
+    const shown = point && point.z < 1
+    el.style.visibility = shown ? 'visible' : 'hidden'
+    if (!shown) return
+    const canvas = this.experience.canvas
+    const x = ((point.x + 1) / 2) * canvas.clientWidth
+    const y = ((1 - point.y) / 2) * canvas.clientHeight
+    el.style.translate = `${x}px ${y}px`
   }
 
   destroy() {

@@ -13,9 +13,11 @@ Resources.preload(sources)
 //   ui: puente con TarotHud · deckRef: recibe la baraja (lectura, barajar, bloquear)
 //   animation · mood · gaze · tarotActive: estado de la calabaza y de la mesa
 //   candles: velas encendidas (las preguntas que le quedan al jugador; undefined = todas)
+//   overPumpkinRef: elemento HTML que la escena coloca sobre la cabeza de la calabaza
 export default function ExperienceCanvas({
   ui,
   deckRef,
+  overPumpkinRef,
   animation,
   mood,
   gaze,
@@ -26,7 +28,7 @@ export default function ExperienceCanvas({
   const experienceRef = useRef(null)
 
   useEffect(() => {
-    const experience = new Experience(canvasRef.current, { ui })
+    const experience = new Experience(canvasRef.current, { ui, overPumpkin: overPumpkinRef })
     experienceRef.current = experience
     deckRef.current = experience.world.deck
     return () => {
@@ -34,7 +36,7 @@ export default function ExperienceCanvas({
       experienceRef.current = null
       deckRef.current = null
     }
-  }, [ui, deckRef])
+  }, [ui, deckRef, overPumpkinRef])
 
   useEffect(() => experienceRef.current?.world.setAnimation(animation), [animation])
   useEffect(() => experienceRef.current?.world.setMood(mood), [mood])

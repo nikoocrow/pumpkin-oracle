@@ -2,6 +2,7 @@
   "intro": {
     "title": "L'Oracle Citrouille",
     "welcome": "Sculptée au clair de lune, allumée d'une flamme volée. Demande, et la citrouille répondra… si elle t'en juge digne.",
+    "candles": "Seules cinq bougies brûlent pour toi, et chaque question ou tirage de cartes en consume une. Utilise-les avec sagesse : quand les cinq seront éteintes, l’oracle se taira et tu ne pourras plus rien faire avant 24 heures.",
     "ctaText": "Réveiller l'Oracle",
     "hint": "L'oracle entend mieux dans le silence."
   },
@@ -150,6 +151,7 @@
   "candles": {
     "out": "Les bougies se sont consumées… Reviens dans {{time}}, mortel.",
     "left_one": "Il reste {{count}} bougie",
-    "left_other": "Il reste {{count}} bougies"
+    "left_other": "Il reste {{count}} bougies",
+    "countdown": "L’oracle s’éveillera dans"
   }
 }

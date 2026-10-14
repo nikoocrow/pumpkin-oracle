@@ -4,6 +4,7 @@ import ExperienceCanvas from '@/components/ExperienceCanvas'
 import QuestionInput from '@/components/overlay/QuestionInput'
 import OracleAnswer from '@/components/overlay/OracleAnswer'
 import TarotHud from '@/components/overlay/TarotHud'
+import CandleCountdown from '@/components/overlay/CandleCountdown'
 import { createHudBridge } from '@/Experience/World/Tarot/hudBridge'
 import { askOracle, readCards, fetchCandles } from '@/services/oracle'
 import { fetchSpeech, fetchLaugh, playLaugh } from '@/services/voice'
@@ -51,6 +52,8 @@ export default function OracleScreen({ userName }) {
   // Velas que quedan: { left, resetAt } (las cuenta el servidor). null hasta saberlo
   const [candles, setCandles] = useState(null)
   const outOfCandles = candles?.left === 0
+  // La cuenta atrás flota sobre la calabaza: la escena la coloca a través de esta ref
+  const countdownRef = useRef(null)
   // Al terminar cada frase la calabaza se ríe (clip 'reir', una vez); el texto sigue en pantalla
   const [laughing, setLaughing] = useState(false)
   // Interpretando la tirada: desde que se completa hasta que acaba la risa final.
@@ -68,6 +71,10 @@ export default function OracleScreen({ userName }) {
   const [greeted, setGreeted] = useState(false)
   const [mode, setMode] = useState(null)
   const tarotActive = mode === 'tarot'
+  // En la mesa, tras la primera lectura aparece "Hablar con el oráculo"; al pulsarlo, la barra
+  // de preguntas (sin salir de la mesa: las preguntas tienen en cuenta las cartas)
+  const [cardsRead, setCardsRead] = useState(false)
+  const [tarotChat, setTarotChat] = useState(false)
 
   // Mesa de tarot: la baraja (Three.js) habla con su interfaz (TarotHud) por este puente
   const [tarotUi] = useState(createHudBridge)
@@ -220,6 +227,7 @@ export default function OracleScreen({ userName }) {
 
     try {
       await hear(await readCards(toSpread(reading), userName, i18n.resolvedLanguage), 'reading')
+      setCardsRead(true)
     } catch (error) {
       setInterpreting(false)
       failed(error)
@@ -256,6 +264,15 @@ export default function OracleScreen({ userName }) {
     }
   }
 
+  const questionInput = (autoFocus = false) => (
+    <QuestionInput
+      autoFocus={autoFocus}
+      onAsk={handleAsk}
+      disabled={thinking || outOfCandles}
+      notice={outOfCandles ? waitText : null}
+    />
+  )
+
   return (
     <section className="oracle">
       <ExperienceCanvas
@@ -263,6 +280,7 @@ export default function OracleScreen({ userName }) {
         mood={status === 'thinking' ? 'thinking' : 'calm'}
         ui={tarotUi}
         deckRef={deckRef}
+        overPumpkinRef={countdownRef}
         tarotActive={tarotActive}
         gaze={tarotActive ? (interpreting ? 'camera' : 'table') : 'free'}
         candles={candles?.left}
@@ -275,6 +293,9 @@ export default function OracleScreen({ userName }) {
           hideLabels={answerKind === 'reading' && !thinking}
           locked={thinking}
         />
+      )}
+      {outOfCandles && candles.resetAt && (
+        <CandleCountdown resetAt={candles.resetAt} anchorRef={countdownRef} />
       )}
       <OracleAnswer
         status={status}
@@ -306,13 +327,21 @@ export default function OracleScreen({ userName }) {
           <button className="oracle__tarot" type="button" onClick={startTarot} disabled={thinking}>
             {t('tarot.offer')}
           </button>
-          <QuestionInput
-            onAsk={handleAsk}
-            disabled={thinking || outOfCandles}
-            notice={outOfCandles ? waitText : null}
-          />
+          {questionInput()}
         </>
       )}
+
+      {tarotActive &&
+        cardsRead &&
+        (tarotChat ? (
+          questionInput(true)
+        ) : (
+          <div className="oracle__choices">
+            <button className="oracle__choice" type="button" onClick={() => setTarotChat(true)}>
+              {t('choice.chat')}
+            </button>
+          </div>
+        ))}
     </section>
   )
 }

@@ -17,6 +17,8 @@ const CROSS_FADE = 0.4 // segundos de mezcla entre clips
 const CANDLE_ORDER = ['Candle_R3', 'Candle_L2', 'Candle_R2', 'Candle_L1', 'Candle_R1']
 const CANDLE_SPEED = 2.5 // rapidez del fundido al apagarse o encenderse
 
+const OVER_HEAD_MARGIN = 0.25 // espacio entre el tallo y lo que flota encima (la cuenta atrás)
+
 // La calabaza oráculo con sus velas (pumpkin_oracle.glb).
 // - animation: clip del GLB ('idle', 'hablar', 'reir'); cada uno se repite mientras dure su estado
 // - gaze: hacia dónde mira
@@ -137,17 +139,45 @@ export default class Pumpkin {
     window.addEventListener('pointermove', this.onPointerMove)
   }
 
+  // Punto (en el mundo) justo encima de la cabeza: sigue a la calabaza cuando el clip la mueve.
+  // Lo que sobresale la cabeza (con el tallo) sobre su centro se mide una vez
+  topPoint() {
+    if (!this.head) return null
+    if (this.headTop === undefined) {
+      this.model.updateMatrixWorld(true)
+      const box = new THREE.Box3().setFromObject(this.head)
+      this.headTop = box.max.y - this.head.getWorldPosition(this.look.target).y
+    }
+    const point = this.head.getWorldPosition((this.topVector ??= new THREE.Vector3()))
+    point.y += this.headTop + OVER_HEAD_MARGIN
+    return point
+  }
+
   // Ánimo: el fuego y las velas se funden hacia el color del ánimo (lo calcula World)
   applyMood(mix, color) {
     applyMoodTint(this.moodLights, mix, color)
   }
 
   update() {
+    this.restoreClipPose()
     this.mixer.update(this.time.delta)
     // Después del mixer: leen lo que dejó el clip y suman encima
     this.updateMouth()
     this.updateLook()
     this.updateCandles()
+  }
+
+  // Deshace lo que la mirada y el lip-sync sumaron al clip en el fotograma anterior.
+  // El mixer solo reescribe un valor si cambió desde el fotograma anterior: al empezar cada
+  // bucle (los clips arrancan en 0.042 s) hay fotogramas iguales, y sin esto el giro de la
+  // mirada se sumaba dos veces y la cabeza daba un salto
+  restoreClipPose() {
+    if (this.look.clipQuat) this.head.quaternion.copy(this.look.clipQuat)
+    this.mouths.forEach((mouth) => {
+      if (mouth.clipWeight === undefined) return
+      mouth.mesh.morphTargetInfluences[mouth.index] = mouth.clipWeight
+      mouth.clipWeight = undefined
+    })
   }
 
   // Lip-sync: mientras habla, la boca sigue las letras de la voz encima del clip 'hablar'
@@ -163,8 +193,9 @@ export default class Pumpkin {
 
     // Apertura 0–1 → rango del morph (cerrada en silencio, abierta en las vocales)
     const voiceWeight = LIP_SYNC.closed + this.mouthLevel * (LIP_SYNC.open - LIP_SYNC.closed)
-    this.mouths.forEach(({ mesh, index }) => {
-      const clipWeight = mesh.morphTargetInfluences[index]
+    this.mouths.forEach((mouth) => {
+      const { mesh, index } = mouth
+      const clipWeight = (mouth.clipWeight = mesh.morphTargetInfluences[index])
       mesh.morphTargetInfluences[index] = clipWeight + (voiceWeight - clipWeight) * LIP_SYNC.mix
     })
   }
@@ -215,6 +246,8 @@ export default class Pumpkin {
     l.pitch += (targetPitch - l.pitch) * t
 
     l.quat.setFromEuler(l.euler.set(l.pitch, l.yaw, 0))
+    l.clipQuat ??= new THREE.Quaternion()
+    l.clipQuat.copy(head.quaternion) // la pose del clip, sin la mirada (ver restoreClipPose)
     head.quaternion.premultiply(l.quat)
 
     // Ojos: van hacia el cursor dentro de su cuenca, más rápido que la cabeza

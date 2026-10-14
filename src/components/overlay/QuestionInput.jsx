@@ -18,7 +18,13 @@ function MicIcon() {
 // Barra para preguntarle al oráculo: escribiendo o dictando con el micrófono.
 // disabled: bloqueada mientras el oráculo piensa (o sin velas)
 // notice: texto en lugar del placeholder (cuándo vuelven las velas)
-export default function QuestionInput({ onAsk, disabled = false, notice = null }) {
+// autoFocus: el cursor entra en la barra al aparecer (cuando la pide el jugador)
+export default function QuestionInput({
+  onAsk,
+  disabled = false,
+  notice = null,
+  autoFocus = false,
+}) {
   const { t, i18n } = useTranslation()
   const [question, setQuestion] = useState('')
   const speech = useSpeechRecognition(i18n.language)
@@ -54,6 +60,7 @@ export default function QuestionInput({ onAsk, disabled = false, notice = null }
         }
         value={question}
         maxLength={200}
+        autoFocus={autoFocus}
         disabled={disabled}
         onChange={(e) => {
           setQuestion(e.target.value)
