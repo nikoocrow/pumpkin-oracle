@@ -7,14 +7,11 @@ import TarotHud from '@/components/overlay/TarotHud'
 import CandleCountdown from '@/components/overlay/CandleCountdown'
 import { createHudBridge } from '@/Experience/World/Tarot/hudBridge'
 import { askOracle, readCards, fetchCandles } from '@/services/oracle'
-import { fetchSpeech, fetchLaugh, playLaugh } from '@/services/voice'
+import { fetchSpeech } from '@/services/voice'
 import { connectLipSync, stopLipSync } from '@/services/lipSync'
 import { voiceAudio } from '@/services/audioUnlock'
 import { setBusy } from '@/services/busy'
 import './OracleScreen.css'
-
-// Duración del clip 'reir': lo que dura la risa si no hay audio
-const LAUGH_CLIP_MS = 4000
 
 // Tiempo que falta (ms) en el idioma del jugador: "14 h 32 min", "14시간 32분"…
 function formatWait(ms, language) {
@@ -58,9 +55,7 @@ export default function OracleScreen({ userName }) {
   const outOfCandles = candles?.left === 0
   // La cuenta atrás flota sobre la calabaza: la escena la coloca a través de esta ref
   const countdownRef = useRef(null)
-  // Al terminar cada frase la calabaza se ríe (clip 'reir', una vez); el texto sigue en pantalla
-  const [laughing, setLaughing] = useState(false)
-  // Interpretando la tirada: desde que se completa hasta que acaba la risa final.
+  // Interpretando la tirada: desde que se completa hasta que termina de leerla.
   // Mientras, la calabaza mira a la cámara; el resto del tarot, al cursor sobre la mesa
   const [interpreting, setInterpreting] = useState(false)
   const [answer, setAnswer] = useState('')
@@ -110,37 +105,6 @@ export default function OracleScreen({ userName }) {
   const wait = useWait(candles?.resetAt, loadCandles)
   const waitText = t('candles.out', { time: formatWait(wait, i18n.resolvedLanguage) })
 
-  // La risa suena con la misma voz. Se precarga al entrar (y al cambiar de idioma)
-  // para que empiece a la vez que la animación
-  const language = i18n.resolvedLanguage
-  useEffect(() => {
-    fetchLaugh(language)
-  }, [language])
-
-  // La risa dura lo que dure su audio (la animación 'reir' se repite mientras tanto); sin audio,
-  // lo que dura el clip. Al acabar termina también la interpretación de las cartas.
-  // Si empieza a pensar otra respuesta, se corta
-  useEffect(() => {
-    if (!laughing) return
-    let stop = null
-    let timer = null
-    let cancelled = false
-    const finish = () => {
-      setLaughing(false)
-      setInterpreting(false)
-    }
-    fetchLaugh(language).then((src) => {
-      if (cancelled) return
-      if (src) stop = playLaugh(src, finish)
-      else timer = setTimeout(finish, LAUGH_CLIP_MS)
-    })
-    return () => {
-      cancelled = true
-      clearTimeout(timer)
-      stop?.()
-    }
-  }, [laughing, language])
-
   // Si se sale de la pantalla a mitad de frase, la voz se calla
   useEffect(
     () => () => {
@@ -182,7 +146,6 @@ export default function OracleScreen({ userName }) {
       console.error('[voice] error:', error.message ?? error)
     }
     setStatus('answered')
-    setLaughing(true)
   }
 
   // Al entrar, el oráculo se presenta (una sola vez, aunque StrictMode monte dos veces)
@@ -225,7 +188,6 @@ export default function OracleScreen({ userName }) {
     if (busyRef.current) return
     if (outOfCandles) return setStatus('exhausted')
     busyRef.current = true
-    setLaughing(false)
     setInterpreting(true)
     setStatus('thinking')
 
@@ -233,9 +195,9 @@ export default function OracleScreen({ userName }) {
       await hear(await readCards(toSpread(reading), userName, i18n.resolvedLanguage), 'reading')
       setCardsRead(true)
     } catch (error) {
-      setInterpreting(false)
       failed(error)
     } finally {
+      setInterpreting(false)
       busyRef.current = false
     }
   }
@@ -254,7 +216,6 @@ export default function OracleScreen({ userName }) {
     if (busyRef.current) return
     if (outOfCandles) return setStatus('exhausted')
     busyRef.current = true
-    setLaughing(false)
     setStatus('thinking')
 
     try {
@@ -280,7 +241,7 @@ export default function OracleScreen({ userName }) {
   return (
     <section className="oracle">
       <ExperienceCanvas
-        animation={status === 'speaking' ? 'hablar' : laughing ? 'reir' : 'idle'}
+        animation={status === 'speaking' ? 'hablar' : 'idle'}
         mood={status === 'thinking' ? 'thinking' : 'calm'}
         ui={tarotUi}
         deckRef={deckRef}

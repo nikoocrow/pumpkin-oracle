@@ -2,15 +2,11 @@
 // Safari solo deja sonar un <audio> o un AudioContext si se activan dentro de un clic; la voz
 // del oráculo llega segundos después (tras pedirla al servidor), así que fallaría con
 // "NotAllowedError: The request is not allowed by the user agent…".
-// Solución: en el primer clic se reproduce un silencio en dos <audio> fijos y se activa el
-// AudioContext; desde entonces toda la voz y la risa usan esos mismos elementos.
+// Solución: en el primer clic se reproduce un silencio en un <audio> fijo; desde entonces toda
+// la voz usa ese mismo elemento.
 // Se importa en main.jsx para escuchar desde el primer clic (el de la intro).
 
 export const voiceAudio = new Audio() // frases del oráculo
-export const laughAudio = new Audio() // risa (amplificada por laughGain)
-
-let context = null
-export let laughGain = null // GainNode por el que suena la risa; null si no hay Web Audio
 
 // WAV de 0.1 s en silencio (8 bits, 8 kHz): no necesita archivo ni red
 function silentWav() {
@@ -36,26 +32,11 @@ function silentWav() {
 
 let unlocked = false
 function unlock() {
-  // Web Audio: cada clic lo reanuda (Safari puede suspenderlo, p. ej. al cambiar de pestaña)
-  try {
-    if (!context) {
-      context = new AudioContext()
-      laughGain = context.createGain()
-      context.createMediaElementSource(laughAudio).connect(laughGain).connect(context.destination)
-    }
-    context.resume()
-  } catch (error) {
-    console.warn('[audio] sin Web Audio:', error.message) // la risa sonará sin amplificar
-  }
-
-  // Los <audio>, solo la primera vez: después podrían estar sonando y el silencio los cortaría
+  // Solo la primera vez: después podría estar sonando y el silencio lo cortaría
   if (unlocked) return
   unlocked = true
-  const silence = silentWav()
-  for (const audio of [voiceAudio, laughAudio]) {
-    audio.src = silence
-    audio.play().catch(() => {}) // si falla, el siguiente clic no lo reintenta: no hay más que hacer
-  }
+  voiceAudio.src = silentWav()
+  voiceAudio.play().catch(() => {}) // si falla, el siguiente clic no lo reintenta: no hay más que hacer
 }
 
 for (const type of ['click', 'touchend', 'keydown']) {

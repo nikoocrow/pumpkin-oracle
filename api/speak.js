@@ -1,12 +1,12 @@
 import { createHash } from 'node:crypto'
 import { createRequire } from 'node:module'
-import { DAILY_GREETINGS, DAILY_LAUGHS, spend, takeVoice, visitorId } from './_lib/candles.js'
+import { DAILY_GREETINGS, spend, takeVoice, visitorId } from './_lib/candles.js'
 import { kv } from './_lib/kv.js'
 
 // Convierte la respuesta del oráculo en voz con ElevenLabs.
 // Corre en el servidor: las keys se leen de las variables de entorno.
-// Nunca pone voz a un texto que mande el navegador: solo a lo que guardó /api/oracle (por su id),
-// al saludo y a la risa, que se escriben aquí.
+// Nunca pone voz a un texto que mande el navegador: solo a lo que guardó /api/oracle (por su id)
+// y al saludo, que se escribe aquí.
 const ELEVENLABS_URL = 'https://api.elevenlabs.io/v1/text-to-speech'
 const MAX_CHARS = 900
 
@@ -25,21 +25,7 @@ function greetingText(language, userName) {
   return name ? greeting.named.replaceAll('{{name}}', name) : greeting.nameless
 }
 
-// Risa: el texto lo pone el servidor. Los modelos v4 y v3 entienden etiquetas como [laughs] y
-// producen una carcajada real, no la lectura del texto. Siempre "hahaha", la misma en todos los
-// idiomas: con "ja, ja", "크크크" o [mischievously] el modelo improvisaba risitas ("jijiji", "jojo").
-// Al ser un solo texto, la caché guarda una sola risa para todos (se genera una vez).
-// Va subiendo: empieza a reír, ríe más fuerte y acaba en carcajada.
-const LAUGH_TEXT =
-  '[laughs heartily] Hahaha... [laughs harder] HAHAHA! Hahahahaha! [laughs out loud] HAHAHAHA!'
-// Se prueba en orden: si la cuenta no tiene acceso a un modelo, pasa al siguiente.
-// El último (sin etiquetas) solo lee el texto, pero al menos suena
-const LAUGH_MODELS = ['eleven_v4', 'eleven_v3']
-const LAUGH_FALLBACK = { model: 'eleven_multilingual_v2', strip: /\[[^\]]*\]\s*/g }
-// Estabilidad baja = más expresiva (v3/v4 solo aceptan 0, 0.5 o 1)
-const LAUGH_SETTINGS = { stability: 0, similarity_boost: 0.75 }
-
-// La risa y el saludo se repiten igual (mismo texto por idioma y nombre): el audio generado se
+// El saludo se repite igual (mismo texto por idioma y nombre): el audio generado se
 // guarda en Redis y se reutiliza, gratis. La clave es el hash del texto, así que si el texto
 // cambia se genera de nuevo. El tope diario solo se gasta cuando de verdad hay que generarlo
 const CACHE_SECONDS = 30 * 24 * 60 * 60
@@ -67,28 +53,6 @@ async function cachedSpeech(key, { visitor, bucket, max, synthesize }) {
   if (!speech) return lostVoice()
   await remember(key, speech)
   return Response.json(speech)
-}
-
-const toBase64 = async (response) => Buffer.from(await response.arrayBuffer()).toString('base64')
-
-async function synthesizeLaugh(voiceId, text) {
-  const attempts = [
-    ...LAUGH_MODELS.map((model) => ({ model, text, voice_settings: LAUGH_SETTINGS })),
-    { model: LAUGH_FALLBACK.model, text: text.replace(LAUGH_FALLBACK.strip, '') },
-  ]
-  for (const { model, ...body } of attempts) {
-    const response = await fetch(`${ELEVENLABS_URL}/${voiceId}?output_format=mp3_44100_128`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'xi-api-key': process.env.ELEVENLABS_API_KEY,
-      },
-      body: JSON.stringify({ ...body, model_id: model }),
-    })
-    if (response.ok) return toBase64(response)
-    console.error('[speak] risa', model, response.status, await response.text())
-  }
-  return null
 }
 
 // Voz con los tiempos de cada letra (para el lip-sync): { audio, alignment }, o null si falla
@@ -122,26 +86,12 @@ function lostVoice(status = 502) {
 // Qué puede pedir el navegador:
 //   { voice }                              → la respuesta del oráculo con ese id (una sola vez)
 //   { kind: 'greeting', language, userName } → el saludo (cacheado; máx. DAILY_GREETINGS nuevos al día)
-//   { kind: 'laugh' }                      → la risa (la misma en todos los idiomas; cacheada)
 export async function POST(request) {
   const { voice, kind, language, userName } = await request.json()
   const voiceId = process.env.ELEVENLABS_VOICE_ID
   const visitor = visitorId(request)
 
   try {
-    if (kind === 'laugh') {
-      const text = LAUGH_TEXT
-      return await cachedSpeech(cacheKey('laugh', text), {
-        visitor,
-        bucket: 'laughs',
-        max: DAILY_LAUGHS,
-        synthesize: async () => {
-          const audio = await synthesizeLaugh(voiceId, text)
-          return audio && { audio, alignment: null }
-        },
-      })
-    }
-
     if (kind === 'greeting') {
       const text = greetingText(language, userName)
       return await cachedSpeech(cacheKey('greeting', text), {

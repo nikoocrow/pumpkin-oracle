@@ -20,6 +20,10 @@ const CANDLE_ORDER = ['Candle_R2', 'Candle_L1', 'Candle_R1']
 const UNUSED_CANDLES = ['Candle_R3', 'Candle_L2']
 const CANDLE_SPEED = 2.5 // rapidez del fundido al apagarse o encenderse
 
+// MouthOpen de la boca cerrada en 'idle' (en el GLB va de -1 a 1): con la boca así, la lengua
+// se queda dentro, en su posición de reposo
+const MOUTH_CLOSED = -0.85
+
 const OVER_HEAD_MARGIN = 0.25 // espacio entre el tallo y lo que flota encima (la cuenta atrás)
 
 // La calabaza oráculo con sus velas (pumpkin_oracle.glb).
@@ -109,7 +113,7 @@ export default class Pumpkin {
     this.animationName = name
   }
 
-  // Mallas con el morph MouthOpen (la boca tallada)
+  // Mallas con el morph MouthOpen (la boca tallada) y la lengua
   setMouth() {
     this.mouths = []
     this.model.traverse((obj) => {
@@ -117,6 +121,17 @@ export default class Pumpkin {
       if (index !== undefined) this.mouths.push({ mesh: obj, index })
     })
     this.mouthLevel = 0
+
+    // La lengua la mueven los clips 'hablar' y 'reir' por su cuenta: la sacan aunque el
+    // lip-sync tenga la boca cerrada, y 'idle' no anima su posición (se quedaba fuera al dejar
+    // de hablar). Por eso la lengua sigue a la boca: dentro con la boca cerrada, y donde la
+    // pone el clip cuanto más abierta esté (updateTongue)
+    this.tongue = this.model.getObjectByName('Tongue')
+    if (this.tongue) {
+      // Reposo: el del GLB (el modelo se reutiliza si la Experience se recrea: se guarda una vez)
+      this.tongue.userData.restPosition ??= this.tongue.position.clone()
+      this.tongueClip = this.tongue.position.clone()
+    }
   }
 
   setLook() {
@@ -170,6 +185,7 @@ export default class Pumpkin {
     this.mixer.update(this.time.delta)
     // Después del mixer: leen lo que dejó el clip y suman encima
     this.updateMouth()
+    this.updateTongue()
     this.updateLook()
     this.updateCandles()
   }
@@ -180,6 +196,7 @@ export default class Pumpkin {
   // mirada se sumaba dos veces y la cabeza daba un salto
   restoreClipPose() {
     if (this.look.clipQuat) this.head.quaternion.copy(this.look.clipQuat)
+    this.tongue?.position.copy(this.tongueClip)
     this.mouths.forEach((mouth) => {
       if (mouth.clipWeight === undefined) return
       mouth.mesh.morphTargetInfluences[mouth.index] = mouth.clipWeight
@@ -205,6 +222,16 @@ export default class Pumpkin {
       const clipWeight = (mouth.clipWeight = mesh.morphTargetInfluences[index])
       mesh.morphTargetInfluences[index] = clipWeight + (voiceWeight - clipWeight) * LIP_SYNC.mix
     })
+  }
+
+  // Lengua según la apertura real de la boca (la del clip o la del lip-sync, ya aplicada)
+  updateTongue() {
+    const mouth = this.mouths[0]
+    if (!this.tongue || !mouth) return
+    const weight = mouth.mesh.morphTargetInfluences[mouth.index]
+    const open = THREE.MathUtils.clamp((weight - MOUTH_CLOSED) / (1 - MOUTH_CLOSED), 0, 1)
+    this.tongueClip.copy(this.tongue.position) // lo que dejó el clip, para restaurarlo
+    this.tongue.position.lerpVectors(this.tongue.userData.restPosition, this.tongueClip, open)
   }
 
   // 'free': solo en idle; al hablar, reír o pensar vuelve suavemente al centro.

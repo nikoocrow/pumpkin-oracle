@@ -7,9 +7,8 @@ import { kv } from './kv.js'
 export const MAX_CANDLES = 3
 const DAY_SECONDS = 24 * 60 * 60
 
-// Lo que no gasta velas también tiene un tope diario (cada voz cuesta en ElevenLabs)
+// El saludo no gasta velas, pero también tiene un tope diario (cada voz cuesta en ElevenLabs)
 export const DAILY_GREETINGS = 10
-export const DAILY_LAUGHS = 10
 
 // Quién pregunta: su IP. En Vercel, x-forwarded-for la pone el propio Vercel (no se puede
 // falsear desde el navegador). Se guarda su hash, no la IP

@@ -63,7 +63,7 @@ La calabaza está en el centro de una mesa de lectura (antes era el proyecto apa
 Cada pregunta o lectura de cartas gasta una de las 3 velas de la escena. Al gastar la primera empieza un plazo de 24 h; al cumplirse vuelven todas. Las cuenta el servidor en Upstash Redis (por IP, guardada como hash), no el navegador.
 
 - **Servidor**: `api/_lib/candles.js`. `/api/oracle` gasta la vela (y la devuelve si Claude falla), `/api/candles` dice cuántas quedan.
-- **Voz**: `/api/speak` nunca pone voz a un texto del navegador: solo a la respuesta que guardó `/api/oracle` (un id de un solo uso), al saludo (lo escribe el servidor con los locales) y a la risa; saludo y risa tienen un tope diario.
+- **Voz**: `/api/speak` nunca pone voz a un texto del navegador: solo a la respuesta que guardó `/api/oracle` (un id de un solo uso), y al saludo (lo escribe el servidor con los locales), que tiene un tope diario.
 - **Local**: `vercel dev` con `KV_REST_API_URL` y `KV_REST_API_TOKEN` en `.env` (ver `.env.example`).
 
 ## Compartir
