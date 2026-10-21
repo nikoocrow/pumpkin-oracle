@@ -2,7 +2,7 @@
   "intro": {
     "title": "L'Oracle Citrouille",
     "welcome": "Sculptée au clair de lune, allumée d'une flamme volée. Demande, et la citrouille répondra… si elle t'en juge digne.",
-    "candles": "Seules cinq bougies brûlent pour toi, et chaque question ou tirage de cartes en consume une. Utilise-les avec sagesse : quand les cinq seront éteintes, l’oracle se taira et tu ne pourras plus rien faire avant 24 heures.",
+    "candles": "Seules trois bougies brûlent pour toi, et chaque question ou tirage de cartes en consume une. Utilise-les avec sagesse : quand les trois seront éteintes, l’oracle se taira et tu ne pourras plus rien faire avant 24 heures.",
     "ctaText": "Réveiller l'Oracle",
     "hint": "L'oracle entend mieux dans le silence."
   },
@@ -41,6 +41,20 @@
     "thinking": "La flamme frémit… l'oracle écoute les esprits.",
     "error": "Les esprits se taisent ce soir. Demande encore, mortel."
   },
+  "credits": {
+    "button": "Crédits",
+    "role": "Design, modélisation et développement",
+    "madeWith": "Réalisé avec Three.js"
+  },
+  "gallery": {
+    "open": "Voir toutes les cartes",
+    "title": "Les cartes de l’oracle",
+    "zoom": "Agrandir {{name}}",
+    "back": "Revenir à toutes les cartes",
+    "prev": "Carte précédente",
+    "next": "Carte suivante",
+    "close": "Fermer"
+  },
   "language": {
     "label": "Langue"
   },
@@ -51,6 +65,8 @@
     "hint": "Touche jusqu'à 3 cartes de l'éventail. Touche-les à nouveau pour les rendre.",
     "hintFull": "Ton tirage est complet. Touche une carte pour la changer.",
     "shuffle": "Rebattre",
+    "shufflesLeft_one": "Il te reste {{count}} mélange",
+    "shufflesLeft_other": "Il te reste {{count}} mélanges",
     "full": "Tu ne peux choisir que 3 cartes",
     "positions": {
       "past": "Passé",

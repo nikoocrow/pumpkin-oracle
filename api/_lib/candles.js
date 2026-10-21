@@ -2,9 +2,9 @@ import { createHash, randomUUID } from 'node:crypto'
 import { kv } from './kv.js'
 
 // Las velas de la calabaza: cada pregunta o lectura de cartas gasta una. Al gastar la primera
-// empieza un plazo de 24 h; al cumplirse vuelven las cinco. Se cuentan aquí, en el servidor:
+// empieza un plazo de 24 h; al cumplirse vuelven las tres. Se cuentan aquí, en el servidor:
 // lo que guarde el navegador se puede borrar.
-export const MAX_CANDLES = 5
+export const MAX_CANDLES = 3
 const DAY_SECONDS = 24 * 60 * 60
 
 // Lo que no gasta velas también tiene un tope diario (cada voz cuesta en ElevenLabs)

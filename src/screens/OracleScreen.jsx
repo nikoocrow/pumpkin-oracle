@@ -296,6 +296,7 @@ export default function OracleScreen({ userName }) {
           // La calabaza narra las cartas: sus etiquetas se apartan para dejar sitio a la lectura
           hideLabels={answerKind === 'reading' && !thinking}
           locked={thinking}
+          bottomTaken={cardsRead}
         />
       )}
       {outOfCandles && candles.resetAt && (

@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
 import EventEmitter from './EventEmitter.js'
 
 // Carga los recursos de Sources.js. Avisa con 'ready' cuando están los iniciales, y load()
@@ -7,8 +8,9 @@ import EventEmitter from './EventEmitter.js'
 // Cada archivo se pide una sola vez: Resources.preload() lo adelanta (durante la intro) y
 // lo reutiliza la Experience que se cree después.
 
+// Los .glb van comprimidos con meshopt (gltf-transform meshopt): ~3 veces menos que sin comprimir
 const loaders = {
-  gltfModel: new GLTFLoader(),
+  gltfModel: new GLTFLoader().setMeshoptDecoder(MeshoptDecoder),
   texture: new THREE.TextureLoader(),
 }
 const cache = new Map() // path → Promise del archivo

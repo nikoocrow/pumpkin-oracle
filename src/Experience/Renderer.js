@@ -7,22 +7,30 @@ import {
   VignetteEffect,
   NoiseEffect,
   ToneMappingEffect,
+  HueSaturationEffect,
+  BrightnessContrastEffect,
   BlendFunction,
   ToneMappingMode,
 } from 'postprocessing'
 import Experience from './Experience.js'
+import { QUALITY } from './Utils/device.js'
 
 // Ajusta aquí el "look" del postprocesado
 const BLOOM = {
-  intensity: 1.2,
+  intensity: 1.5,
   luminanceThreshold: 1, // solo brilla lo que pasa de 1 (llamas emisivas), no la calabaza iluminada
   luminanceSmoothing: 0.3,
   radius: 0.7,
+  // El halo es un desenfoque: calcularlo a media resolución no se distingue y cuesta 4 veces menos
+  resolutionScale: 0.5,
 }
 const VIGNETTE = { offset: 0.3, darkness: 0.75 }
 const GRAIN = 0.06
+// Etalonaje tras el tone mapping: AgX deja los colores algo lavados; esto los vuelve más
+// cálidos y profundos (violetas intensos, dorados que destacan)
+const GRADE = { saturation: 0.12, contrast: 0.1 }
 
-// WebGLRenderer + postprocesado (bloom, viñeta, grano y tone mapping AgX, como en Blender)
+// WebGLRenderer + postprocesado (bloom, viñeta, grano, tone mapping AgX como en Blender y etalonaje)
 export default class Renderer {
   constructor() {
     this.experience = new Experience()
@@ -54,7 +62,7 @@ export default class Renderer {
   setComposer() {
     this.composer = new EffectComposer(this.instance, {
       frameBufferType: THREE.HalfFloatType, // el bloom necesita valores > 1
-      multisampling: 4,
+      multisampling: QUALITY.multisampling,
     })
     this.composer.addPass(new RenderPass(this.scene, this.camera.instance))
 
@@ -67,8 +75,10 @@ export default class Renderer {
         new BloomEffect({ mipmapBlur: true, ...BLOOM }),
         new VignetteEffect(VIGNETTE),
         noise,
-        // Va al final, igual que en Blender (AgX)
+        // Tras el bloom, igual que en Blender (AgX)
         new ToneMappingEffect({ mode: ToneMappingMode.AGX }),
+        new HueSaturationEffect({ saturation: GRADE.saturation }),
+        new BrightnessContrastEffect({ contrast: GRADE.contrast }),
       ),
     )
   }

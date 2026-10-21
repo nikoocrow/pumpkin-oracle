@@ -60,7 +60,7 @@ La calabaza está en el centro de una mesa de lectura (antes era el proyecto apa
 
 ## Velas (límite de preguntas)
 
-Cada pregunta o lectura de cartas gasta una de las 5 velas de la escena. Al gastar la primera empieza un plazo de 24 h; al cumplirse vuelven todas. Las cuenta el servidor en Upstash Redis (por IP, guardada como hash), no el navegador.
+Cada pregunta o lectura de cartas gasta una de las 3 velas de la escena. Al gastar la primera empieza un plazo de 24 h; al cumplirse vuelven todas. Las cuenta el servidor en Upstash Redis (por IP, guardada como hash), no el navegador.
 
 - **Servidor**: `api/_lib/candles.js`. `/api/oracle` gasta la vela (y la devuelve si Claude falla), `/api/candles` dice cuántas quedan.
 - **Voz**: `/api/speak` nunca pone voz a un texto del navegador: solo a la respuesta que guardó `/api/oracle` (un id de un solo uso), al saludo (lo escribe el servidor con los locales) y a la risa; saludo y risa tienen un tope diario.
@@ -80,7 +80,7 @@ React solo pinta la interfaz HTML. La escena es Three.js puro en `src/Experience
 world.setAnimation('hablar') // 'idle' | 'hablar' | 'reir'
 world.setGaze('table') // 'free' | 'table' | 'camera'
 world.setMood('thinking') // ánimos de theme/moods.js
-world.setCandles(3) // velas encendidas (0–5), con fundido
+world.setCandles(3) // velas encendidas (0–3), con fundido
 world.startTarot() // la cámara pasa a la mesa y se reparten las cartas
 world.deck // lectura, barajar y bloqueo de la baraja
 ```

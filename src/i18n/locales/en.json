@@ -2,7 +2,7 @@
   "intro": {
     "title": "The Pumpkin Oracle",
     "welcome": "Carved by moonlight, lit by a stolen flame. Ask, and the pumpkin shall answer… if it deems you worthy.",
-    "candles": "Only five candles burn for you, and each question or card reading consumes one. Use them wisely: once all five go out, the oracle falls silent and you can do nothing more until 24 hours have passed.",
+    "candles": "Only three candles burn for you, and each question or card reading consumes one. Use them wisely: once all three go out, the oracle falls silent and you can do nothing more until 24 hours have passed.",
     "ctaText": "Wake the Oracle",
     "hint": "The oracle hears better in silence."
   },
@@ -41,6 +41,20 @@
     "thinking": "The flame stirs… the oracle is listening to the spirits.",
     "error": "The spirits are silent tonight. Ask again, mortal."
   },
+  "credits": {
+    "button": "Credits",
+    "role": "Design, modeling and development",
+    "madeWith": "Made with Three.js"
+  },
+  "gallery": {
+    "open": "See all the cards",
+    "title": "The oracle’s cards",
+    "zoom": "Enlarge {{name}}",
+    "back": "Back to all the cards",
+    "prev": "Previous card",
+    "next": "Next card",
+    "close": "Close"
+  },
   "language": {
     "label": "Language"
   },
@@ -51,6 +65,8 @@
     "hint": "Tap up to 3 cards from the fan. Tap them again to return them.",
     "hintFull": "Your reading is complete. Tap a card to change it.",
     "shuffle": "Shuffle again",
+    "shufflesLeft_one": "{{count}} shuffle left",
+    "shufflesLeft_other": "{{count}} shuffles left",
     "full": "You can only choose 3 cards",
     "positions": {
       "past": "Past",

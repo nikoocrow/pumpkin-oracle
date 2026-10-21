@@ -11,11 +11,18 @@ const FRAMES = {
     look: new THREE.Vector3(0, 0.85, 0),
     parallax: 0.4,
   },
-  table: { base: new THREE.Vector3(0, 10, 13.5), look: new THREE.Vector3(0, 0, 3.4), parallax: 1 },
+  // Mesa: la distancia la ajusta TABLE_FIT al ancho de pantalla; look algo hacia la calabaza
+  // para que no se suba al título
+  table: { base: new THREE.Vector3(0, 8.8, 12.3), look: new THREE.Vector3(0, 0, 2.3), parallax: 1 },
 }
 
 // Niebla con la cámara a distancia normal; se aleja con ella en pantallas estrechas
 const FOG = { near: 16, far: 34 }
+
+// La mesa llena el ancho de la pantalla: el ancho visible crece con la distancia × aspect,
+// así que la distancia (multiplicador sobre table.base, desde look) va con 1 / aspect.
+// fit: multiplicador con aspect 1 · min: tope en pantallas muy anchas (si no, se corta arriba y abajo)
+const TABLE_FIT = { fit: 1.2, min: 0.65 }
 
 export const INTRO_SECONDS = 3.2 // la cámara baja hasta la calabaza
 
@@ -48,6 +55,8 @@ export default class Camera {
     this.rig = { focus: 1, intro: 1.6, mx: 0, my: 0, tx: 0, ty: 0 }
     this.base = new THREE.Vector3()
     this.look = new THREE.Vector3()
+    this.pumpkinBase = new THREE.Vector3()
+    this.tableBase = new THREE.Vector3()
 
     this.onPointerMove = (e) => {
       this.rig.tx = (e.clientX / window.innerWidth) * 2 - 1
@@ -107,20 +116,23 @@ export default class Camera {
     const { rig, instance: camera } = this
     const { delta: dt, elapsed: t } = this.time
 
-    // En pantallas estrechas la cámara se aleja para que quepa la escena
+    // En pantallas estrechas la cámara se aleja para que quepa la calabaza (la mesa: TABLE_FIT)
     const zoom = Math.max(1, Math.pow(1.6 / camera.aspect, 0.7))
     if (this.scene.fog) {
       this.scene.fog.near = FOG.near * zoom
       this.scene.fog.far = FOG.far * zoom
     }
     const { pumpkin, table } = FRAMES
-    this.base.lerpVectors(pumpkin.base, table.base, rig.focus)
+    const tableZoom = Math.max(TABLE_FIT.min, TABLE_FIT.fit / camera.aspect)
+    this.pumpkinBase.copy(pumpkin.base).multiplyScalar(zoom)
+    this.tableBase.subVectors(table.base, table.look).multiplyScalar(tableZoom).add(table.look)
+    this.base.lerpVectors(this.pumpkinBase, this.tableBase, rig.focus)
     this.look.lerpVectors(pumpkin.look, table.look, rig.focus)
     const parallax = THREE.MathUtils.lerp(pumpkin.parallax, table.parallax, rig.focus)
 
     rig.mx += (rig.tx - rig.mx) * Math.min(1, dt * 2.5)
     rig.my += (rig.ty - rig.my) * Math.min(1, dt * 2.5)
-    camera.position.copy(this.base).multiplyScalar(zoom * rig.intro)
+    camera.position.copy(this.base).multiplyScalar(rig.intro)
     camera.position.x += (rig.mx * 1.1 + Math.sin(t * 0.15) * 0.15) * parallax
     camera.position.y += (-rig.my * 0.5 + Math.sin(t * 0.21) * 0.08) * parallax
     camera.lookAt(this.look.x + rig.mx * 0.3 * parallax, this.look.y, this.look.z)

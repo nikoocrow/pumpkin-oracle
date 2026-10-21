@@ -11,7 +11,7 @@ export const LIGHTS = {
   // Multiplicadores extra sobre esa base
   studioScale: 1.5, // Key / Fill / Rim / Bounce (luces de área → focos: emiten ~4x menos)
   practicalScale: 1.0, // velas
-  shadowMapSize: 2048,
+  // shadowMapSize: lo decide el perfil del dispositivo (Utils/device.js)
   castShadowsFrom: ['Key_Light_Spot'],
 }
 

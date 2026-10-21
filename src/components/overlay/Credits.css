@@ -1,0 +1,185 @@
+/* Esquina inferior derecha, por encima de cualquier pantalla (incluido el canvas) */
+.credits {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+  /* La tarjeta oculta sigue ocupando sitio: el contenedor no debe tapar lo que hay debajo
+     (el idioma en móvil, la escena en escritorio). Solo reciben toques el botón y la tarjeta abierta */
+  pointer-events: none;
+}
+
+/* Anula el estilo global de button de IntroScreen.css */
+.credits .credits__toggle {
+  display: flex;
+  pointer-events: auto;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.25rem 1.125rem 0.25rem 0.25rem;
+  border: 1px solid var(--color-smoke);
+  border-radius: 999px;
+  background-color: rgb(15 12 20 / 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--color-bone);
+  font-family: var(--font-ui);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.credits .credits__toggle:hover,
+.credits .credits__toggle:focus-visible,
+.credits .credits__toggle[aria-expanded='true'] {
+  border-color: var(--mood-core);
+  background-color: rgb(15 12 20 / 0.6);
+  color: var(--color-flame);
+  box-shadow: 0 0 18px var(--mood-glow);
+}
+
+.credits__avatar {
+  width: 2.125rem;
+  height: 2.125rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 28%;
+}
+
+/* La tarjeta aparece sobre el botón */
+.credits__card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  width: min(calc(100vw - 2rem), 24rem);
+  padding: 1.5rem;
+  border: 1px solid var(--color-smoke);
+  border-radius: 1.5rem;
+  background-color: rgb(15 12 20 / 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 18px 48px rgb(0 0 0 / 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.5rem) scale(0.98);
+  transform-origin: 100% 100%;
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out),
+    visibility 0s linear var(--duration-base);
+}
+
+.credits__card.is-open {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.credits__photo {
+  flex: none;
+  width: 6rem;
+  height: 6rem;
+  border: 3px solid var(--color-void);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 28%;
+  outline: 3px solid var(--mood-core);
+  box-shadow: 0 0 24px var(--mood-glow);
+}
+
+.credits__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.credits__name {
+  color: var(--color-bone);
+  font-family: var(--font-ui);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.credits__role,
+.credits__made {
+  color: var(--color-bone-dim);
+  font-family: var(--font-ui);
+  font-size: var(--text-chip);
+  line-height: 1.4;
+}
+
+.credits__link {
+  color: var(--mood-core);
+  font-family: var(--font-ui);
+  font-size: var(--text-chip);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.credits__link:hover,
+.credits__link:focus-visible {
+  color: var(--color-flame);
+  text-decoration: underline;
+}
+
+/* La barra de preguntas (36rem) va centrada abajo: si el hueco a su lado no da para el
+   botón entero, queda solo la foto */
+@media (max-width: 1000px) {
+  .credits .credits__toggle {
+    padding: 0.25rem;
+  }
+
+  .credits__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Móvil: abajo no queda hueco. El botón sube a la esquina superior izquierda (a la derecha
+   está el idioma) y la tarjeta se abre hacia abajo */
+@media (max-width: 700px) {
+  .credits {
+    top: max(1rem, env(safe-area-inset-top));
+    right: auto;
+    bottom: auto;
+    left: max(1rem, env(safe-area-inset-left));
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+
+  .credits__card {
+    transform: translateY(-0.5rem) scale(0.98);
+    transform-origin: 0 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .credits__card {
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .credits__photo {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+}

@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import Experience from '../Experience.js'
+import { QUALITY } from '../Utils/device.js'
 import { LIGHTS, FIRE, LOOK_AT, MODEL_OFFSET_Y } from '../config.js'
 import { setupMoodTint, applyMoodTint } from './MoodTint.js'
 import { getMouthTarget, LIP_SYNC, MOUTH_SHAPES } from '@/services/lipSync'
@@ -12,9 +13,11 @@ const TABLE_PLANE = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
 
 const CROSS_FADE = 0.4 // segundos de mezcla entre clips
 
-// Las cinco velas son las preguntas que le quedan al jugador. Se apagan de fuera hacia dentro:
+// Las tres velas son las preguntas que le quedan al jugador. Se apagan de fuera hacia dentro:
 // las últimas en apagarse son las que están junto a la calabaza
-const CANDLE_ORDER = ['Candle_R3', 'Candle_L2', 'Candle_R2', 'Candle_L1', 'Candle_R1']
+const CANDLE_ORDER = ['Candle_R2', 'Candle_L1', 'Candle_R1']
+// El modelo trae cinco velas; las de los extremos no se usan
+const UNUSED_CANDLES = ['Candle_R3', 'Candle_L2']
 const CANDLE_SPEED = 2.5 // rapidez del fundido al apagarse o encenderse
 
 const OVER_HEAD_MARGIN = 0.25 // espacio entre el tallo y lo que flota encima (la cuenta atrás)
@@ -55,6 +58,10 @@ export default class Pumpkin {
 
   // Llama y luz de cada vela, en el orden en que se apagan. level: 1 encendida, 0 apagada
   setCandleFlames() {
+    for (const name of UNUSED_CANDLES) {
+      const candle = this.model.getObjectByName(name)
+      if (candle) candle.visible = false
+    }
     this.candles = CANDLE_ORDER.map((name) => {
       const flame = this.model.getObjectByName(`${name}_Flame`)
       const light = this.model.getObjectByName(`${name}_Light`)
@@ -368,7 +375,7 @@ function setupLights(lights) {
     const casts = LIGHTS.castShadowsFrom.includes(light.name)
     light.castShadow = casts
     if (casts) {
-      light.shadow.mapSize.set(LIGHTS.shadowMapSize, LIGHTS.shadowMapSize)
+      light.shadow.mapSize.setScalar(QUALITY.shadowMapSize)
       light.shadow.bias = -0.0004
       light.shadow.normalBias = 0.02
       light.shadow.radius = 4

@@ -2,7 +2,7 @@
   "intro": {
     "title": "El Oráculo Calabaza",
     "welcome": "Tallada a la luz de la luna, encendida con una llama robada. Pregunta, y la calabaza responderá… si te considera digno.",
-    "candles": "Solo cinco velas arden por ti, y cada pregunta o lectura de cartas consume una. Úsalas con sabiduría: cuando se apaguen las cinco, el oráculo callará y no podrás hacer nada más hasta que pasen 24 horas.",
+    "candles": "Solo tres velas arden por ti, y cada pregunta o lectura de cartas consume una. Úsalas con sabiduría: cuando se apaguen las tres, el oráculo callará y no podrás hacer nada más hasta que pasen 24 horas.",
     "ctaText": "Despertar al Oráculo",
     "hint": "El oráculo escucha mejor en silencio."
   },
@@ -41,6 +41,20 @@
     "thinking": "La llama se agita… el oráculo escucha a los espíritus.",
     "error": "Los espíritus callan esta noche. Pregunta de nuevo, mortal."
   },
+  "credits": {
+    "button": "Créditos",
+    "role": "Diseño, modelado y desarrollo",
+    "madeWith": "Hecho con Three.js"
+  },
+  "gallery": {
+    "open": "Ver todas las cartas",
+    "title": "Las cartas del oráculo",
+    "zoom": "Ampliar {{name}}",
+    "back": "Volver a todas las cartas",
+    "prev": "Carta anterior",
+    "next": "Carta siguiente",
+    "close": "Cerrar"
+  },
   "language": {
     "label": "Idioma"
   },
@@ -51,6 +65,8 @@
     "hint": "Toca hasta 3 cartas del abanico. Tócalas otra vez para devolverlas.",
     "hintFull": "Tu lectura está completa. Toca una carta para cambiarla.",
     "shuffle": "Barajar de nuevo",
+    "shufflesLeft_one": "Te queda {{count}} barajada",
+    "shufflesLeft_other": "Te quedan {{count}} barajadas",
     "full": "Solo puedes elegir 3 cartas",
     "positions": {
       "past": "Pasado",

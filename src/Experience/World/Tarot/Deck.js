@@ -1,9 +1,9 @@
 import * as THREE from 'three'
 import Experience from '../../Experience.js'
 import { CARDS, POSITIONS } from './cardsData.js'
-import { createSlotTexture } from './textures.js'
 import { createHudBridge } from './hudBridge.js'
 import { tween, ease, wait } from '../../Utils/tween.js'
+import { QUALITY } from '../../Utils/device.js'
 
 export const MAX_SELECTED = 3
 const CARD_H = 1.76
@@ -24,6 +24,10 @@ const PILE = { x: 0, z: 2.0 }
 const SLOT_SCALE = 1.0
 const SLOT_TILT = 1.0 // radianes: inclinadas hacia la cámara
 const SLOTS = [-1.8, 0, 1.8].map((x) => new THREE.Vector3(x, 0.82, 4.75))
+// Círculo de cada hueco (public/textures/slot-N.webp): tamaño sobre la mesa, opacidad
+// vacío / con su carta y glow: el color se multiplica por encima de 1 para que el bloom
+// lo haga brillar (como luz dorada sobre el mantel)
+const MARKER = { size: 1.9, rest: 0.6, active: 1, glow: 2.6 }
 // Al revelarse, la carta se planta justo delante de la cámara, de frente, antes de ir a su hueco.
 // fill: parte del alto de pantalla que ocupa (en pantallas estrechas manda el ancho: fillWidth)
 const REVEAL = { scale: 1.35, fill: 0.62, fillWidth: 0.82, hold: 1.2, glow: 1 }
@@ -80,7 +84,8 @@ export default class Deck {
     for (const [type, fn] of Object.entries(this.listeners)) this.canvas.addEventListener(type, fn)
   }
 
-  // items: recursos de tarotSources (Sources.js): el modelo de la carta, el reverso y las caras
+  // items: recursos de tarotSources (Sources.js): el modelo de la carta, el reverso, las caras
+  // y los círculos de los huecos
   setResources(items) {
     this.template = items.cardModel.scene
     const anisotropy = this.renderer.capabilities.getMaxAnisotropy()
@@ -98,7 +103,7 @@ export default class Deck {
       metalness: 0.2,
     })
     this.build()
-    this.buildSlotMarkers()
+    this.buildSlotMarkers([1, 2, 3].map((n) => items[`slot${n}`]))
   }
 
   destroy() {
@@ -116,13 +121,15 @@ export default class Deck {
   }
 
   // Sube las texturas a la GPU y compila los shaders mientras la baraja está oculta,
-  // para que al revelarla no haya un tirón. Una textura por fotograma.
+  // para que al revelarla no haya un tirón. Una textura por fotograma (en móvil, reducida antes
+  // a QUALITY.cardTextureWidth).
   async warmUp() {
     const { renderer, scene } = this
     const nextFrame = () => new Promise((r) => requestAnimationFrame(r))
     const textures = [this.backMat.map, ...this.faceTextures.values()]
     for (const tex of textures) {
       if (this.disposed) return
+      fitTexture(tex, QUALITY.cardTextureWidth)
       renderer.initTexture(tex)
       await nextFrame()
     }
@@ -201,22 +208,24 @@ export default class Deck {
     }
   }
 
-  buildSlotMarkers() {
-    const geo = new THREE.PlaneGeometry(1.7, 1.7)
+  buildSlotMarkers(textures) {
+    const geo = new THREE.PlaneGeometry(MARKER.size, MARKER.size)
     this.markers = SLOTS.map((p, i) => {
+      const map = textures[i]
+      map.colorSpace = THREE.SRGBColorSpace
+      map.anisotropy = this.renderer.capabilities.getMaxAnisotropy()
       const mat = new THREE.MeshBasicMaterial({
-        map: createSlotTexture(['I', 'II', 'III'][i]),
-        color: 0xffc77a,
+        map,
+        color: new THREE.Color().setScalar(MARKER.glow),
         transparent: true,
         opacity: 0,
-        blending: THREE.AdditiveBlending,
         depthWrite: false,
       })
       const m = new THREE.Mesh(geo, mat)
       m.rotation.x = -Math.PI / 2
       m.position.set(p.x, 0.004, p.z - 0.1)
       this.group.add(m)
-      tween(mat, { opacity: 0.35 }, { duration: 1.4, delay: 0.8 + i * 0.2 })
+      tween(mat, { opacity: MARKER.rest }, { duration: 1.4, delay: 0.8 + i * 0.2 })
       return m
     })
   }
@@ -350,7 +359,7 @@ export default class Deck {
     card.userData.animating = false
     if (card.userData.selected) {
       this.ui.showLabel(slot, card.userData.data)
-      tween(this.markers[slot].material, { opacity: 0.9 }, { duration: 0.6 })
+      tween(this.markers[slot].material, { opacity: MARKER.active }, { duration: 0.6 })
     }
     // La tirada está completa cuando la última de las tres cartas se posa en su hueco
     const landed = this.slots.every((c) => c && !c.userData.animating)
@@ -389,7 +398,7 @@ export default class Deck {
     this.slots[slot] = null
     Object.assign(card.userData, { selected: false, slot: -1, animating: true })
     this.ui.showLabel(slot, null)
-    tween(this.markers[slot].material, { opacity: 0.35 }, { duration: 0.6 })
+    tween(this.markers[slot].material, { opacity: MARKER.rest }, { duration: 0.6 })
     this.refreshUI()
     const pose = this.fanPose(card.userData.index)
     tween(card.position, { y: 1.6 }, { duration: 0.35 }).then(() =>
@@ -464,7 +473,7 @@ export default class Deck {
     this.slots.forEach((c, i) => {
       if (!c) return
       this.ui.showLabel(i, null)
-      tween(this.markers[i].material, { opacity: 0.35 }, { duration: 0.6 })
+      tween(this.markers[i].material, { opacity: MARKER.rest }, { duration: 0.6 })
     })
     this.slots = [null, null, null]
     this.cards.forEach((c) =>
@@ -546,4 +555,19 @@ export default class Deck {
       )
     })
   }
+}
+
+// Reduce la imagen de una textura a `width` px de ancho (si es más ancha) antes de subirla a
+// la GPU. La textura se reutiliza entre Experiences (caché de Resources): solo se hace una vez
+function fitTexture(texture, width) {
+  const { image } = texture
+  if (!width || !image || image.width <= width) return
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = Math.round((image.height * width) / image.width)
+  const ctx = canvas.getContext('2d')
+  ctx.imageSmoothingQuality = 'high'
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+  texture.image = canvas
+  texture.needsUpdate = true
 }

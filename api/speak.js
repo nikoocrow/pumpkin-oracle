@@ -25,23 +25,19 @@ function greetingText(language, userName) {
   return name ? greeting.named.replaceAll('{{name}}', name) : greeting.nameless
 }
 
-// Risa: el texto lo pone el servidor (el navegador solo dice el idioma). Los modelos v4 y v3
-// entienden etiquetas como [laughs] y producen una carcajada real, no la lectura de "jajaja".
+// Risa: el texto lo pone el servidor. Los modelos v4 y v3 entienden etiquetas como [laughs] y
+// producen una carcajada real, no la lectura del texto. Siempre "hahaha", la misma en todos los
+// idiomas: con "ja, ja", "크크크" o [mischievously] el modelo improvisaba risitas ("jijiji", "jojo").
+// Al ser un solo texto, la caché guarda una sola risa para todos (se genera una vez).
 // Va subiendo: empieza a reír, ríe más fuerte y acaba en carcajada.
-const LAUGHS = {
-  es: '[mischievously] [starts laughing] Ja, ja, ja... [laughs harder] ¡JA, JA, JA, JAAA! [laughs]',
-  en: '[mischievously] [starts laughing] Ha, ha, ha... [laughs harder] HA, HA, HA, HAAA! [laughs]',
-  fr: '[mischievously] [starts laughing] Ha, ha, ha... [laughs harder] HA, HA, HA, HAAA ! [laughs]',
-  ko: '[mischievously] [starts laughing] 크크크... [laughs harder] 하하하하! 하하하하하! [laughs]',
-}
+const LAUGH_TEXT =
+  '[laughs heartily] Hahaha... [laughs harder] HAHAHA! Hahahahaha! [laughs out loud] HAHAHAHA!'
 // Se prueba en orden: si la cuenta no tiene acceso a un modelo, pasa al siguiente.
 // El último (sin etiquetas) solo lee el texto, pero al menos suena
 const LAUGH_MODELS = ['eleven_v4', 'eleven_v3']
 const LAUGH_FALLBACK = { model: 'eleven_multilingual_v2', strip: /\[[^\]]*\]\s*/g }
 // Estabilidad baja = más expresiva (v3/v4 solo aceptan 0, 0.5 o 1)
 const LAUGH_SETTINGS = { stability: 0, similarity_boost: 0.75 }
-
-const laughText = (language) => (Object.hasOwn(LAUGHS, language) ? LAUGHS[language] : LAUGHS.en)
 
 // La risa y el saludo se repiten igual (mismo texto por idioma y nombre): el audio generado se
 // guarda en Redis y se reutiliza, gratis. La clave es el hash del texto, así que si el texto
@@ -126,7 +122,7 @@ function lostVoice(status = 502) {
 // Qué puede pedir el navegador:
 //   { voice }                              → la respuesta del oráculo con ese id (una sola vez)
 //   { kind: 'greeting', language, userName } → el saludo (cacheado; máx. DAILY_GREETINGS nuevos al día)
-//   { kind: 'laugh', language }            → la risa (cacheada; máx. DAILY_LAUGHS nuevas al día)
+//   { kind: 'laugh' }                      → la risa (la misma en todos los idiomas; cacheada)
 export async function POST(request) {
   const { voice, kind, language, userName } = await request.json()
   const voiceId = process.env.ELEVENLABS_VOICE_ID
@@ -134,7 +130,7 @@ export async function POST(request) {
 
   try {
     if (kind === 'laugh') {
-      const text = laughText(language)
+      const text = LAUGH_TEXT
       return await cachedSpeech(cacheKey('laugh', text), {
         visitor,
         bucket: 'laughs',

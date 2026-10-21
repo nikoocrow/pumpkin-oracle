@@ -3,7 +3,6 @@ import { INTRO_SECONDS } from '../Camera.js'
 import { tarotSources } from '../Sources.js'
 import { wait } from '../Utils/tween.js'
 import { createMoodFade, stepMoodFade } from './MoodTint.js'
-import { CANVAS_FONT } from './Tarot/textures.js'
 import Environment from './Environment.js'
 import Table from './Table.js'
 import Pumpkin from './Pumpkin.js'
@@ -31,6 +30,7 @@ export default class World {
     this.deck = new Deck() // oculta y vacía hasta que se carga y se pide el tarot
 
     this.resources.on('ready', () => {
+      this.table.setTexture(this.resources.items.tableTexture)
       this.pumpkin = new Pumpkin()
       this.pumpkin.setAnimationName(this.state.animation)
       this.pumpkin.gaze = this.state.gaze
@@ -48,9 +48,6 @@ export default class World {
   async loadTarot() {
     try {
       await wait(INTRO_SECONDS)
-      // La fuente de los números de los huecos tiene que estar lista antes de dibujarlos
-      await Promise.race([document.fonts.load(`600 72px ${CANVAS_FONT}`), wait(2.5)])
-      if (this.destroyed) return false
       const items = await this.resources.load(tarotSources)
       if (this.destroyed) return false
       this.deck.setResources(items)

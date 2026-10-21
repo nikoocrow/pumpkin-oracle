@@ -1,6 +1,7 @@
 import IntroScreen from '@/screens/IntroScreen'
 import AskName from '@/screens/AskName'
 import LanguageSwitcher from '@/components/overlay/LanguageSwitcher'
+import Credits from '@/components/overlay/Credits'
 import { lazy, Suspense, useEffect, useState } from 'react'
 
 // La escena 3D (three, R3F, postprocesado, modelos) va en su propio archivo: la intro carga
@@ -31,6 +32,7 @@ export default function App() {
   return (
     <main style={baseStyle}>
       <LanguageSwitcher />
+      <Credits />
       {screen === 'intro' && <IntroScreen onStart={() => setScreen('askName')} />}
       {screen === 'askName' && <AskName onSubmit={handleName} />}
       {screen === 'oracle' && (

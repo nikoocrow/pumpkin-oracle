@@ -1,12 +1,15 @@
 import * as THREE from 'three'
 import Experience from '../Experience.js'
-import { createTableTexture, createHaloTexture } from './Tarot/textures.js'
+import { QUALITY } from '../Utils/device.js'
+import { createHaloTexture } from './Tarot/textures.js'
 
 export const TABLE_RADIUS = 6.5
 const DUST_COUNT = 420
 
-// Mesa de lectura: terciopelo, aro dorado, faldón, foco cenital con su haz y polvo flotando.
-// Sin suelo ni velas propias: las velas son las del GLB de la calabaza, que está en el centro.
+// Mesa de lectura: mantel (public/textures/mesa.webp), aro dorado, faldón, foco cenital con su
+// haz y polvo flotando. Sin suelo ni velas propias: las velas son las del GLB de la calabaza,
+// que está en el centro. El mantel llega con los recursos iniciales (setTexture); hasta
+// entonces la mesa es terciopelo liso del mismo tono.
 export default class Table {
   constructor() {
     this.experience = new Experience()
@@ -25,16 +28,21 @@ export default class Table {
   }
 
   setMeshes() {
-    const table = new THREE.Mesh(
-      new THREE.CircleGeometry(TABLE_RADIUS, 128),
-      new THREE.MeshStandardMaterial({ map: createTableTexture(), roughness: 0.92, metalness: 0 }),
-    )
+    this.cloth = new THREE.MeshStandardMaterial({ color: 0x240c30, roughness: 0.92, metalness: 0 })
+    const table = new THREE.Mesh(new THREE.CircleGeometry(TABLE_RADIUS, 128), this.cloth)
     table.rotation.x = -Math.PI / 2
     table.receiveShadow = true
 
     const rim = new THREE.Mesh(
       new THREE.TorusGeometry(TABLE_RADIUS, 0.09, 16, 160),
-      new THREE.MeshStandardMaterial({ color: 0xc9a25a, metalness: 0.9, roughness: 0.3 }),
+      // Un poco de luz propia: brillo cálido sin llegar a ser una banda plana
+      new THREE.MeshStandardMaterial({
+        color: 0xc9a25a,
+        metalness: 0.9,
+        roughness: 0.3,
+        emissive: 0xff8a3c,
+        emissiveIntensity: 0.45,
+      }),
     )
     rim.rotation.x = -Math.PI / 2
 
@@ -46,6 +54,16 @@ export default class Table {
     this.group.add(table, rim, skirt)
   }
 
+  // La imagen es cuadrada y la mesa la recorta en círculo: arriba de la imagen = el fondo
+  // de la mesa (detrás de la calabaza), abajo = el lado de la cámara
+  setTexture(texture) {
+    texture.colorSpace = THREE.SRGBColorSpace
+    texture.anisotropy = 8
+    this.cloth.map = texture
+    this.cloth.color.set(0xffffff)
+    this.cloth.needsUpdate = true
+  }
+
   setLights() {
     this.hemiLight = new THREE.HemisphereLight(0x9c88ff, 0x120818, 0.35)
 
@@ -53,7 +71,7 @@ export default class Table {
     this.spot.position.set(0, 10, 1.5)
     this.spot.target.position.set(0, 0, 0.3)
     this.spot.castShadow = true
-    this.spot.shadow.mapSize.set(2048, 2048)
+    this.spot.shadow.mapSize.setScalar(QUALITY.shadowMapSize)
     this.spot.shadow.bias = -0.0004
     this.spot.shadow.radius = 4
     this.group.add(this.hemiLight, this.spot, this.spot.target)
