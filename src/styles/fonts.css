@@ -1,0 +1,3 @@
+/* Las fuentes se cargan con <link> en index.html (un @import aquí retrasaría su descarga
+   hasta leer este CSS). Para self-hosting, sustituir por @font-face con los archivos en
+   src/assets/fonts y mantener los mismos nombres de familia. */

@@ -1,0 +1,63 @@
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: trasparent;
+}
+
+.intro__title {
+  font-family: var(--font-title);
+  font-size: var(--text-title);
+}
+
+.intro__welcome {
+  text-align: center;
+  font-family: var(--font-oracle);
+  font-size: var(--text-whisper);
+  margin-bottom: 1rem;
+}
+
+/* La regla de las velas: tres preguntas, luego 24 h de silencio */
+.intro__candles {
+  max-width: 34rem;
+  text-align: center;
+  font-family: var(--font-oracle);
+  font-size: var(--text-chip);
+  font-style: italic;
+  color: var(--color-flame);
+  margin-bottom: 1rem;
+}
+
+.intro__share {
+  margin-top: 1.5rem;
+}
+
+.intro__hint {
+  text-align: center;
+  font-family: var(--font-oracle);
+  font-size: var(--text-whisper);
+  margin-top: 1rem;
+}
+
+button {
+  font-family: var(--font-oracle);
+  font-size: var(--text-whisper);
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  border: 1px solid var(--mood-core);
+  border-radius: 50px;
+  background-color: transparent;
+  color: var(--font-ui);
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--mood-core);
+  color: #000;
+  font-weight: bold;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}

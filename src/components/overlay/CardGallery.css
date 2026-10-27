@@ -1,0 +1,412 @@
+/* Botón de la portada: secundario, bajo "Despertar al Oráculo". Los selectores dobles anulan
+   el estilo global de button de IntroScreen.css */
+.intro .gallery__open {
+  margin: 0.25rem 0 0;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--color-smoke);
+  border-radius: 999px;
+  background-color: rgb(15 12 20 / 0.6);
+  color: var(--color-bone-dim);
+  font-family: var(--font-ui);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.intro .gallery__open:hover,
+.intro .gallery__open:focus-visible {
+  border-color: var(--mood-core);
+  background-color: rgb(15 12 20 / 0.6);
+  color: var(--color-flame);
+  font-weight: 600;
+}
+
+/* ── Galería: ventana a pantalla completa ── */
+.gallery {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-bone);
+}
+
+.gallery::backdrop {
+  background-color: rgb(7 6 10 / 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.gallery[open] {
+  animation: gallery-in var(--duration-base) var(--ease-out);
+}
+
+@keyframes gallery-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}
+
+.gallery__panel {
+  width: min(100% - 2rem, 72rem);
+  margin: max(1rem, env(safe-area-inset-top)) auto max(1rem, env(safe-area-inset-bottom));
+}
+
+/* Título y cerrar se quedan arriba al bajar por las cartas */
+.gallery__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  background: linear-gradient(var(--color-void) 70%, transparent);
+}
+
+.gallery__title {
+  font-family: var(--font-title);
+  font-size: var(--text-subtitle);
+  font-weight: 400;
+  letter-spacing: var(--tracking-title);
+  text-shadow: 0 0 18px var(--mood-glow);
+}
+
+.gallery .gallery__close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-smoke);
+  border-radius: 50%;
+  background-color: rgb(15 12 20 / 0.6);
+  color: var(--color-bone);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.gallery .gallery__close:hover,
+.gallery .gallery__close:focus-visible {
+  border-color: var(--mood-core);
+  background-color: rgb(15 12 20 / 0.6);
+  color: var(--color-flame);
+}
+
+.gallery__close svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+}
+
+/* Tantas columnas como quepan, ninguna más estrecha que 10rem (2 en móvil) */
+.gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100% / 2 - 0.5rem), 1fr));
+  gap: 2rem 1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gallery__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  /* Oculta hasta que entra en pantalla (is-shown la pone CardGallery al verla) */
+  opacity: 0;
+}
+
+/* Entrada: sube desde abajo, se endereza y se enfoca, con un destello que la recorre */
+.gallery__card.is-shown {
+  animation: gallery-card-rise 0.8s var(--ease-out) both;
+}
+
+@keyframes gallery-card-rise {
+  from {
+    opacity: 0;
+    transform: perspective(800px) translateY(2.5rem) rotateX(18deg) scale(0.94);
+    filter: blur(6px);
+  }
+  60% {
+    filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* El destello: una franja de luz dorada cruza la carta al aparecer (el botón la recorta) */
+.gallery__zoom-in::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgb(255 214 140 / 0.35) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+.gallery__card.is-shown .gallery__zoom-in::after {
+  animation: gallery-card-shine 1.1s var(--ease-out) both;
+  animation-delay: inherit;
+}
+
+@keyframes gallery-card-shine {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(120%);
+  }
+}
+
+/* Con movimiento reducido, sin cascada ni destello: las cartas simplemente están */
+@media (prefers-reduced-motion: reduce) {
+  .gallery__card {
+    opacity: 1;
+  }
+
+  .gallery__card.is-shown,
+  .gallery__card.is-shown .gallery__zoom-in::after {
+    animation: none;
+  }
+}
+
+.gallery__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 768 / 1072;
+  /* La ilustración se funde al terminar de cargar (las de abajo cargan al bajar) */
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.gallery__image.is-loaded {
+  opacity: 1;
+}
+
+.gallery__card:hover .gallery__zoom-in {
+  transform: translateY(-0.25rem);
+  box-shadow:
+    0 14px 36px rgb(0 0 0 / 0.55),
+    0 0 24px var(--mood-glow);
+}
+
+.gallery__numeral {
+  margin-top: 0.75rem;
+  color: var(--mood-core);
+  font-family: var(--font-ui);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+}
+
+.gallery__name {
+  margin-top: 0.125rem;
+  font-family: var(--font-oracle);
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.gallery__meaning {
+  margin-top: 0.25rem;
+  color: var(--color-bone-dim);
+  font-family: var(--font-oracle);
+  font-size: var(--text-chip);
+  font-style: italic;
+  line-height: 1.35;
+}
+
+/* Cada imagen es un botón que la abre en grande */
+.gallery .gallery__zoom-in {
+  position: relative; /* para el destello */
+  overflow: hidden;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0.75rem;
+  /* Fondo mientras carga la ilustración */
+  background-color: var(--color-ash);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.5);
+  cursor: zoom-in;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+.gallery .gallery__zoom-in:hover {
+  background-color: var(--color-ash);
+}
+
+.gallery .gallery__zoom-in:focus-visible {
+  outline: 2px solid var(--mood-core);
+  outline-offset: 4px;
+}
+
+.gallery .gallery__zoom-in:focus-visible {
+  transform: translateY(-0.25rem);
+}
+
+/* ── Zoom: una carta en grande sobre la galería ── */
+.gallery__zoom {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  background-color: rgb(7 6 10 / 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  touch-action: pan-y;
+  animation: gallery-zoom-in var(--duration-base) var(--ease-out);
+}
+
+@keyframes gallery-zoom-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.gallery .gallery__zoom-close {
+  position: absolute;
+  top: max(1rem, env(safe-area-inset-top));
+  right: max(1rem, env(safe-area-inset-right));
+}
+
+.gallery__zoom-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  animation: gallery-card-in var(--duration-base) var(--ease-out);
+}
+
+@keyframes gallery-card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+/* Lo más grande que quepa dejando sitio al texto de abajo */
+.gallery__zoom-image {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: calc(100dvh - 11rem);
+  aspect-ratio: 768 / 1072;
+  border-radius: 1rem;
+  box-shadow:
+    0 20px 60px rgb(0 0 0 / 0.6),
+    0 0 40px var(--mood-glow);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.gallery__zoom-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.gallery__zoom-caption .gallery__name {
+  font-size: 1.5rem;
+}
+
+.gallery__zoom-caption .gallery__meaning {
+  font-size: var(--text-whisper);
+}
+
+.gallery .gallery__nav {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-smoke);
+  border-radius: 50%;
+  background-color: rgb(15 12 20 / 0.6);
+  color: var(--color-bone);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.gallery .gallery__nav:hover,
+.gallery .gallery__nav:focus-visible {
+  border-color: var(--mood-core);
+  background-color: rgb(15 12 20 / 0.6);
+  color: var(--color-flame);
+}
+
+.gallery__nav svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Móvil: la carta ocupa todo el ancho; las flechas bajan a los lados del texto */
+@media (max-width: 700px) {
+  .gallery__zoom {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr auto;
+    align-content: center;
+  }
+
+  .gallery__zoom-figure {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .gallery__zoom-image {
+    max-height: calc(100dvh - 14rem);
+  }
+
+  .gallery .gallery__nav {
+    grid-row: 2;
+  }
+
+  .gallery .gallery__nav--prev {
+    justify-self: end;
+  }
+
+  .gallery .gallery__nav--next {
+    justify-self: start;
+  }
+}

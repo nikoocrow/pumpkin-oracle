@@ -1,0 +1,10 @@
+/* La escena ocupa toda la pantalla, detrás de la interfaz */
+.experience {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  touch-action: none; /* el arrastre en móvil no desplaza la página */
+}

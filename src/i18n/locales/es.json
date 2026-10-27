@@ -1,0 +1,181 @@
+{
+  "intro": {
+    "title": "El Oráculo Calabaza",
+    "welcome": "Tallada a la luz de la luna, encendida con una llama robada. Pregunta, y la calabaza responderá… si te considera digno.",
+    "candles": "Solo tres velas arden por ti, y cada pregunta o lectura de cartas consume una. Úsalas con sabiduría: cuando se apaguen las tres, el oráculo callará y no podrás hacer nada más hasta que pasen 24 horas.",
+    "ctaText": "Despertar al Oráculo",
+    "hint": "El oráculo escucha mejor en silencio."
+  },
+  "name": {
+    "title": "¿Quién se atreve a despertarme? Dime tu nombre, mortal... No lo olvidaré.",
+    "label": "Quedarse sin nombre",
+    "placeholder": "Susurra tu nombre…",
+    "ctaText": "Ofrecer mi nombre",
+    "ctaText2": "quedarme sin nombre",
+    "error": "El oráculo no puede responder a un alma sin nombre."
+  },
+  "question": {
+    "label": "Tu pregunta para el oráculo",
+    "placeholder": "Pregúntale al oráculo…",
+    "listening": "El oráculo te escucha…",
+    "speak": "Di tu pregunta",
+    "stopSpeaking": "Dejar de escuchar",
+    "send": "Preguntar",
+    "micError": {
+      "denied": "El oráculo no puede oírte: permite el acceso al micrófono.",
+      "noMic": "No encuentro ningún micrófono, mortal.",
+      "noSpeech": "Solo oigo silencio… inténtalo de nuevo.",
+      "network": "Los espíritus de la red no responden. Escribe tu pregunta.",
+      "generic": "El micrófono falló. Escribe tu pregunta."
+    }
+  },
+  "greeting": {
+    "named": "Ah, {{name}}... Te estaba esperando. Soy el Oráculo Calabaza, guardián de secretos tallados a la luz de las velas. Pregunta, y responderé. O, si lo prefieres, deja que las cartas del tarot hablen por ti.",
+    "nameless": "Un extraño... qué delicia. Sin nombre, solo preguntas. Soy el Oráculo Calabaza, guardián de secretos tallados a la luz de las velas. Pregunta, extraño, si te atreves. O, si lo prefieres, deja que las cartas del tarot hablen por ti."
+  },
+  "choice": {
+    "label": "¿Qué deseas, mortal?",
+    "chat": "Hablar con el oráculo"
+  },
+  "answer": {
+    "thinking": "La llama se agita… el oráculo escucha a los espíritus.",
+    "error": "Los espíritus callan esta noche. Pregunta de nuevo, mortal."
+  },
+  "credits": {
+    "button": "Créditos",
+    "role": "Diseño, modelado y desarrollo",
+    "madeWith": "Hecho con Three.js"
+  },
+  "gallery": {
+    "open": "Ver todas las cartas",
+    "title": "Las cartas del oráculo",
+    "zoom": "Ampliar {{name}}",
+    "back": "Volver a todas las cartas",
+    "prev": "Carta anterior",
+    "next": "Carta siguiente",
+    "close": "Cerrar"
+  },
+  "language": {
+    "label": "Idioma"
+  },
+  "tarot": {
+    "offer": "Leer el tarot",
+    "eyebrow": "Lectura de tres cartas",
+    "title": "Elige tus cartas",
+    "hint": "Toca hasta 3 cartas del abanico. Tócalas otra vez para devolverlas.",
+    "hintFull": "Tu lectura está completa. Toca una carta para cambiarla.",
+    "shuffle": "Barajar de nuevo",
+    "shufflesLeft_one": "Te queda {{count}} barajada",
+    "shufflesLeft_other": "Te quedan {{count}} barajadas",
+    "full": "Solo puedes elegir 3 cartas",
+    "positions": {
+      "past": "Pasado",
+      "present": "Presente",
+      "future": "Futuro"
+    }
+  },
+  "cards": {
+    "fool": {
+      "name": "El Loco",
+      "meaning": "Un salto de fe; empezar sin miedo."
+    },
+    "magician": {
+      "name": "El Mago",
+      "meaning": "Tienes las herramientas; úsalas."
+    },
+    "highPriestess": {
+      "name": "La Sacerdotisa",
+      "meaning": "Intuición y conocimiento oculto."
+    },
+    "empress": {
+      "name": "La Emperatriz",
+      "meaning": "Abundancia, creatividad y cuidado."
+    },
+    "emperor": {
+      "name": "El Emperador",
+      "meaning": "Estructura, orden y liderazgo."
+    },
+    "hierophant": {
+      "name": "El Hierofante",
+      "meaning": "Tradición, guía y aprendizaje."
+    },
+    "lovers": {
+      "name": "Los Enamorados",
+      "meaning": "Una elección que nace del corazón."
+    },
+    "chariot": {
+      "name": "El Carro",
+      "meaning": "Determinación y avance firme."
+    },
+    "strength": {
+      "name": "La Fuerza",
+      "meaning": "Valor sereno y dominio propio."
+    },
+    "hermit": {
+      "name": "El Ermitaño",
+      "meaning": "Mirar hacia dentro para ver claro."
+    },
+    "wheelOfFortune": {
+      "name": "La Rueda de la Fortuna",
+      "meaning": "Ciclos y giros inesperados."
+    },
+    "justice": {
+      "name": "La Justicia",
+      "meaning": "Equilibrio, verdad y consecuencias."
+    },
+    "hangedMan": {
+      "name": "El Colgado",
+      "meaning": "Pausa y una nueva perspectiva."
+    },
+    "death": {
+      "name": "La Muerte",
+      "meaning": "Un final que abre otro comienzo."
+    },
+    "temperance": {
+      "name": "La Templanza",
+      "meaning": "Paciencia y punto medio."
+    },
+    "devil": {
+      "name": "El Diablo",
+      "meaning": "Ataduras que conviene revisar."
+    },
+    "tower": {
+      "name": "La Torre",
+      "meaning": "Cambio súbito que libera."
+    },
+    "star": {
+      "name": "La Estrella",
+      "meaning": "Esperanza y renovación."
+    },
+    "moon": {
+      "name": "La Luna",
+      "meaning": "Sueños, dudas e imaginación."
+    },
+    "sun": {
+      "name": "El Sol",
+      "meaning": "Alegría, éxito y claridad."
+    },
+    "experienceApprentice": {
+      "name": "Aprendiz de Experiencias",
+      "meaning": "Cada experiencia es una lección nueva."
+    },
+    "experienceCreator": {
+      "name": "Creador de Experiencias",
+      "meaning": "Conviertes ideas en experiencias vivas."
+    }
+  },
+  "candles": {
+    "out": "Las velas se han consumido… Vuelve en {{time}}, mortal.",
+    "left_one": "Queda {{count}} vela",
+    "left_other": "Quedan {{count}} velas",
+    "countdown": "El oráculo despertará en"
+  },
+  "share": {
+    "label": "Comparte el oráculo",
+    "wait": "Mientras esperas, comparte el oráculo",
+    "on": "Compartir en {{network}}",
+    "text": "Consulté al Oráculo Calabaza 🎃 ¿Te atreves a preguntarle?",
+    "copied": "Enlace copiado: pégalo en {{network}}.",
+    "copyFailed": "Copia este enlace: {{url}}"
+  }
+}

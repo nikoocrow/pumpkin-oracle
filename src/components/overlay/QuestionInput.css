@@ -1,0 +1,157 @@
+/* Barra flotante sobre la escena: solo ocupa su caja, así el resto del canvas sigue recibiendo el ratón */
+.question {
+  position: absolute;
+  left: 50%;
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(calc(100% - 2rem), 36rem);
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.375rem 0.375rem 1.25rem;
+  border: 1px solid var(--color-smoke);
+  border-radius: 999px;
+  background-color: rgb(15 12 20 / 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
+}
+
+.question:focus-within {
+  border-color: var(--mood-core);
+  box-shadow: 0 0 24px var(--mood-glow);
+}
+
+.question__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0;
+  border: none;
+  background-color: transparent;
+  color: var(--color-bone);
+  font-family: var(--font-oracle);
+  font-size: var(--text-input);
+  outline: none;
+}
+
+.question__input::placeholder {
+  color: var(--color-bone-dim);
+  font-style: italic;
+}
+
+/* Aviso del micrófono: flota justo encima de la barra sin empujar nada */
+.question__error {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + 0.625rem);
+  margin: 0;
+  color: var(--color-ember);
+  font-family: var(--font-oracle);
+  font-size: var(--text-hint);
+  font-style: italic;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* ── Botones redondos ───────────────────────────────── */
+.question__mic,
+.question__send {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out);
+}
+
+.question__mic svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.question__mic {
+  width: 3.25rem;
+  height: 3.25rem;
+  color: var(--color-bone-dim);
+}
+
+.question__mic:hover {
+  color: var(--color-flame);
+  background-color: var(--color-ash);
+}
+
+/* Escuchando: se enciende y late */
+.question__mic.is-listening {
+  color: var(--color-void);
+  background-color: var(--mood-core);
+  animation: question-pulse 1.2s var(--ease-out) infinite;
+}
+
+.question__send {
+  width: 3rem;
+  height: 3rem;
+  /* IntroScreen.css da estilo a todos los button (padding, borde, fondo al pasar): aquí no */
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out),
+    filter var(--duration-fast) var(--ease-out);
+}
+
+/* Calabaza en vez de flecha: trae sus colores, así que sin círculo de fondo; brilla al pasar */
+.question__send-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px var(--mood-glow));
+  pointer-events: none;
+}
+
+.question__send:hover:not(:disabled),
+.question__send:focus-visible {
+  background: none;
+  transform: scale(1.1) rotate(-6deg);
+  filter: drop-shadow(0 0 10px var(--mood-core));
+}
+
+/* Sin pregunta escrita: apagada */
+.question__send:disabled {
+  opacity: 0.4;
+  filter: grayscale(0.8);
+  cursor: default;
+}
+
+@keyframes question-pulse {
+  from {
+    box-shadow: 0 0 0 0 var(--mood-glow);
+  }
+  to {
+    box-shadow: 0 0 0 0.75rem transparent;
+  }
+}
+
+/* Bloqueada mientras el oráculo piensa */
+.question.is-disabled {
+  opacity: 0.5;
+}
+
+.question__input:disabled,
+.question__mic:disabled {
+  cursor: default;
+  pointer-events: none;
+}

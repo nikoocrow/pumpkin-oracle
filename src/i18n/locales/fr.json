@@ -1,0 +1,181 @@
+{
+  "intro": {
+    "title": "L'Oracle Citrouille",
+    "welcome": "Sculptée au clair de lune, allumée d'une flamme volée. Demande, et la citrouille répondra… si elle t'en juge digne.",
+    "candles": "Seules trois bougies brûlent pour toi, et chaque question ou tirage de cartes en consume une. Utilise-les avec sagesse : quand les trois seront éteintes, l’oracle se taira et tu ne pourras plus rien faire avant 24 heures.",
+    "ctaText": "Réveiller l'Oracle",
+    "hint": "L'oracle entend mieux dans le silence."
+  },
+  "name": {
+    "title": "Qui ose me réveiller ? Dis-moi ton nom, mortel... Je ne l'oublierai pas.",
+    "label": "Rester sans nom",
+    "placeholder": "Murmure ton nom…",
+    "ctaText": "Offrir mon nom",
+    "ctaText2": "rester sans nom",
+    "error": "L'oracle ne peut répondre à une âme sans nom."
+  },
+  "question": {
+    "label": "Ta question pour l'oracle",
+    "placeholder": "Interroge l'oracle…",
+    "listening": "L'oracle t'écoute…",
+    "speak": "Dis ta question",
+    "stopSpeaking": "Arrêter l'écoute",
+    "send": "Demander",
+    "micError": {
+      "denied": "L'oracle ne t'entend pas : autorise l'accès au micro.",
+      "noMic": "Aucun micro trouvé, mortel.",
+      "noSpeech": "Seul le silence… réessaie.",
+      "network": "Les esprits du réseau se taisent. Écris ta question.",
+      "generic": "Le micro a échoué. Écris ta question."
+    }
+  },
+  "greeting": {
+    "named": "Ah, {{name}}... Je t'attendais. Je suis l'Oracle Citrouille, gardien des secrets sculptés à la lueur des bougies. Demande, et je répondrai. Ou, si tu préfères, laisse les cartes du tarot parler pour toi.",
+    "nameless": "Un étranger... quel délice. Pas de nom, seulement des questions. Je suis l'Oracle Citrouille, gardien des secrets sculptés à la lueur des bougies. Demande, étranger, si tu l'oses. Ou, si tu préfères, laisse les cartes du tarot parler pour toi."
+  },
+  "choice": {
+    "label": "Que désires-tu, mortel ?",
+    "chat": "Parler à l'oracle"
+  },
+  "answer": {
+    "thinking": "La flamme frémit… l'oracle écoute les esprits.",
+    "error": "Les esprits se taisent ce soir. Demande encore, mortel."
+  },
+  "credits": {
+    "button": "Crédits",
+    "role": "Design, modélisation et développement",
+    "madeWith": "Réalisé avec Three.js"
+  },
+  "gallery": {
+    "open": "Voir toutes les cartes",
+    "title": "Les cartes de l’oracle",
+    "zoom": "Agrandir {{name}}",
+    "back": "Revenir à toutes les cartes",
+    "prev": "Carte précédente",
+    "next": "Carte suivante",
+    "close": "Fermer"
+  },
+  "language": {
+    "label": "Langue"
+  },
+  "tarot": {
+    "offer": "Lire le tarot",
+    "eyebrow": "Tirage en trois cartes",
+    "title": "Choisis tes cartes",
+    "hint": "Touche jusqu'à 3 cartes de l'éventail. Touche-les à nouveau pour les rendre.",
+    "hintFull": "Ton tirage est complet. Touche une carte pour la changer.",
+    "shuffle": "Rebattre",
+    "shufflesLeft_one": "Il te reste {{count}} mélange",
+    "shufflesLeft_other": "Il te reste {{count}} mélanges",
+    "full": "Tu ne peux choisir que 3 cartes",
+    "positions": {
+      "past": "Passé",
+      "present": "Présent",
+      "future": "Futur"
+    }
+  },
+  "cards": {
+    "fool": {
+      "name": "Le Mat",
+      "meaning": "Un saut dans l'inconnu ; commencer sans peur."
+    },
+    "magician": {
+      "name": "Le Bateleur",
+      "meaning": "Tu as les outils ; sers-t'en."
+    },
+    "highPriestess": {
+      "name": "La Papesse",
+      "meaning": "Intuition et savoir caché."
+    },
+    "empress": {
+      "name": "L'Impératrice",
+      "meaning": "Abondance, créativité et soin."
+    },
+    "emperor": {
+      "name": "L'Empereur",
+      "meaning": "Structure, ordre et autorité."
+    },
+    "hierophant": {
+      "name": "Le Pape",
+      "meaning": "Tradition, guide et apprentissage."
+    },
+    "lovers": {
+      "name": "L'Amoureux",
+      "meaning": "Un choix qui naît du cœur."
+    },
+    "chariot": {
+      "name": "Le Chariot",
+      "meaning": "Détermination et avancée ferme."
+    },
+    "strength": {
+      "name": "La Force",
+      "meaning": "Courage serein et maîtrise de soi."
+    },
+    "hermit": {
+      "name": "L'Hermite",
+      "meaning": "Regarder en soi pour y voir clair."
+    },
+    "wheelOfFortune": {
+      "name": "La Roue de Fortune",
+      "meaning": "Cycles et tournants inattendus."
+    },
+    "justice": {
+      "name": "La Justice",
+      "meaning": "Équilibre, vérité et conséquences."
+    },
+    "hangedMan": {
+      "name": "Le Pendu",
+      "meaning": "Une pause et un nouveau regard."
+    },
+    "death": {
+      "name": "La Mort",
+      "meaning": "Une fin qui ouvre un nouveau départ."
+    },
+    "temperance": {
+      "name": "La Tempérance",
+      "meaning": "Patience et juste milieu."
+    },
+    "devil": {
+      "name": "Le Diable",
+      "meaning": "Des liens qu'il vaut mieux revoir."
+    },
+    "tower": {
+      "name": "La Tour",
+      "meaning": "Un changement soudain qui libère."
+    },
+    "star": {
+      "name": "L'Étoile",
+      "meaning": "Espoir et renouveau."
+    },
+    "moon": {
+      "name": "La Lune",
+      "meaning": "Rêves, doutes et imagination."
+    },
+    "sun": {
+      "name": "Le Soleil",
+      "meaning": "Joie, réussite et clarté."
+    },
+    "experienceApprentice": {
+      "name": "Apprenti d'expériences",
+      "meaning": "Chaque expérience est une nouvelle leçon."
+    },
+    "experienceCreator": {
+      "name": "Créateur d'expériences",
+      "meaning": "Tu transformes les idées en expériences vivantes."
+    }
+  },
+  "candles": {
+    "out": "Les bougies se sont consumées… Reviens dans {{time}}, mortel.",
+    "left_one": "Il reste {{count}} bougie",
+    "left_other": "Il reste {{count}} bougies",
+    "countdown": "L’oracle s’éveillera dans"
+  },
+  "share": {
+    "label": "Partage l’oracle",
+    "wait": "En attendant, partage l’oracle",
+    "on": "Partager sur {{network}}",
+    "text": "J’ai consulté l’Oracle Citrouille 🎃 Oseras-tu l’interroger ?",
+    "copied": "Lien copié : colle-le dans {{network}}.",
+    "copyFailed": "Copie ce lien : {{url}}"
+  }
+}

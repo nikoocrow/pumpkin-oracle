@@ -1,0 +1,132 @@
+/* Texto flotante bajo la calabaza, justo encima de la barra de pregunta.
+   No bloquea el ratón para que el canvas siga interactivo. */
+.answer {
+  position: absolute;
+  bottom: calc(max(1.5rem, env(safe-area-inset-bottom)) + 5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100% - 2rem), 36rem);
+  text-align: center;
+  pointer-events: none;
+}
+
+.answer__text {
+  color: var(--color-candle);
+  font-family: var(--font-oracle);
+  font-size: var(--text-whisper);
+  font-style: italic;
+  line-height: var(--leading-body);
+  /* Sombra oscura primero para leerse sobre las velas, luego el resplandor */
+  text-shadow:
+    0 0 6px var(--color-void),
+    0 0 16px var(--mood-glow);
+  animation: answer-rise 1.2s var(--ease-out) both;
+}
+
+/* Pensando: más pequeño, del color del ánimo y respirando */
+.answer__text.is-thinking {
+  color: var(--mood-core);
+  font-size: var(--text-chip);
+  animation:
+    answer-rise 0.6s var(--ease-out) both,
+    answer-breathe 1.6s var(--ease-in-out) 0.6s infinite alternate;
+}
+
+/* Lectura de las cartas: más larga, así que más ancha y un poco más pequeña */
+.answer.is-reading {
+  width: min(calc(100% - 2rem), 44rem);
+}
+
+.answer.is-reading .answer__text.is-speaking,
+.answer.is-reading .answer__text.is-answered {
+  font-size: clamp(1rem, 0.96rem + 0.19vw, 1.125rem); /* 16 → 18 */
+  line-height: 1.45;
+}
+
+.answer__text.is-error {
+  color: var(--color-bone-dim);
+  font-size: var(--text-chip);
+}
+
+/* ── Spinner de "pensando": anillo girando + llama temblando ── */
+.answer__spinner {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0.875rem auto 0.75rem; /* abajo: aire sobre la barra de preguntas */
+  animation: answer-rise 0.6s var(--ease-out) both;
+}
+
+/* El anillo: casi transparente salvo un arco del color del ánimo */
+.answer__spinner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--mood-glow);
+  border-top-color: var(--mood-core);
+  border-radius: 50%;
+  box-shadow: 0 0 18px var(--mood-glow);
+  animation: answer-spin 1.1s linear infinite;
+}
+
+.answer__flame {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: var(--mood-core);
+  filter: drop-shadow(0 0 6px var(--mood-core));
+  transform-origin: 50% 90%;
+  animation: answer-flicker 0.9s var(--ease-in-out) infinite alternate;
+}
+
+@keyframes answer-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes answer-flicker {
+  0% {
+    transform: scale(1, 1) rotate(-2deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(0.92, 1.08) rotate(2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.04, 0.94) rotate(-1deg);
+    opacity: 0.75;
+  }
+}
+
+/* Con movimiento reducido: el anillo gira despacio y la llama no tiembla */
+@media (prefers-reduced-motion: reduce) {
+  .answer__spinner::before {
+    animation-duration: 3s;
+  }
+
+  .answer__flame {
+    animation: none;
+  }
+}
+
+@keyframes answer-rise {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes answer-breathe {
+  to {
+    opacity: 0.4;
+  }
+}

@@ -1,0 +1,115 @@
+.oracle {
+  position: relative;
+  height: 100vh;
+}
+
+/* Elección tras el saludo: hablar o leer el tarot, donde luego irá la barra de preguntas */
+.oracle__choices {
+  position: absolute;
+  left: 50%;
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
+  translate: -50% 0;
+  display: flex;
+  gap: 0.75rem;
+  animation: oracle-offer 1s var(--ease-out) both;
+}
+
+.oracle__choice {
+  min-height: 3.25rem;
+  padding: 0 1.75rem;
+  border: 1px solid var(--mood-core);
+  border-radius: 999px;
+  background-color: rgb(15 12 20 / 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--mood-core);
+  font-family: var(--font-ui);
+  font-size: var(--text-button);
+  font-weight: 600;
+  letter-spacing: var(--tracking-button);
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 0 24px var(--mood-glow);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.oracle__choice:hover,
+.oracle__choice:focus-visible {
+  background-color: var(--mood-core);
+  color: var(--color-void);
+}
+
+/* Botón de tarot mientras se conversa: arriba, centrado */
+.oracle__tarot {
+  position: absolute;
+  top: max(1.5rem, env(safe-area-inset-top));
+  left: 50%;
+  translate: -50% 0;
+  min-height: 2.75rem;
+  padding: 0 1.5rem;
+  border: 1px solid var(--mood-core);
+  border-radius: 999px;
+  background-color: rgb(15 12 20 / 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--mood-core);
+  font-family: var(--font-ui);
+  font-size: var(--text-button);
+  font-weight: 600;
+  letter-spacing: var(--tracking-button);
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 0 24px var(--mood-glow);
+  animation: oracle-offer 1s var(--ease-out) both;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.oracle__tarot:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.oracle__tarot:hover {
+  background-color: var(--mood-core);
+  color: var(--color-void);
+}
+
+@keyframes oracle-offer {
+  from {
+    opacity: 0;
+    transform: translateY(-0.75rem);
+  }
+}
+
+/* Móvil: arriba a la derecha está el idioma, la oferta va debajo. Las opciones van lado a lado
+   con el texto en dos líneas: así ocupan lo mismo que la barra y no tapan el saludo */
+@media (max-width: 700px) {
+  .oracle__choices {
+    width: calc(100% - 2rem);
+  }
+
+  .oracle__choice {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    line-height: 1.3;
+    white-space: normal;
+  }
+
+  .oracle__tarot {
+    top: calc(max(1rem, env(safe-area-inset-top)) + 4.25rem);
+  }
+}
+
+/* Velas que quedan, solo para lectores de pantalla (a la vista ya están las velas de la escena) */
+.oracle__candles {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
